@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wycena Druku 3D — Wgraj plik STL</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --w:#ffffff;--off:#f8f7f4;--cream:#eeece6;--sand:#d8d4c8;
+  --mid:#918e84;--dark:#2e2c28;--ink:#18160f;
+  --acc:#e8440a;--aL:rgba(232,68,10,.10);--aM:rgba(232,68,10,.22);
+  --green:#1a7a4a;--gL:rgba(26,122,74,.10);
+  --sans:'DM Sans',sans-serif;--mono:'DM Mono',monospace;--display:'Syne',sans-serif;
+  --r:12px;--r2:20px;--sh:0 2px 14px rgba(24,22,15,.07);--shL:0 8px 40px rgba(24,22,15,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--off);color:var(--ink);font-family:var(--sans);min-height:100vh;padding-bottom:80px}
+
+/* HERO */
+.hero{background:var(--ink);color:#fff;padding:48px 20px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 95% 50%,rgba(232,68,10,.2) 0%,transparent 60%),repeating-linear-gradient(45deg,transparent,transparent 28px,rgba(255,255,255,.012) 28px,rgba(255,255,255,.012) 29px)}
+.hi{position:relative;max-width:720px;margin:0 auto}
+.back{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;margin-bottom:22px;transition:color .18s;letter-spacing:.04em}
+.back:hover{color:rgba(255,255,255,.7)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:10px}
+.hero h1{font-family:var(--display);font-size:clamp(28px,6vw,52px);font-weight:800;line-height:1.05;margin-bottom:14px}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.5);line-height:1.65;max-width:480px;font-weight:300}
+.steps{display:flex;gap:18px;margin-top:26px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,.45)}
+.sn{width:22px;height:22px;border-radius:50%;background:var(--acc);color:#fff;font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* MAIN */
+.main{max-width:720px;margin:0 auto;padding:0 16px}
+
+/* CARD */
+.card{background:var(--w);border-radius:var(--r2);box-shadow:var(--sh);margin-top:20px;overflow:hidden}
+.ch{padding:18px 22px 14px;border-bottom:1px solid var(--cream);display:flex;align-items:center;gap:12px}
+.ci{width:36px;height:36px;border-radius:10px;background:var(--aL);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ct{font-family:var(--display);font-size:15px;font-weight:700}
+.cd{font-size:13px;color:var(--mid);margin-top:2px}
+.cb{padding:22px}
+
+/* DROPZONE */
+.dz{border:2px dashed var(--sand);border-radius:var(--r);padding:38px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--off);position:relative}
+.dz:hover,.dz.over{border-color:var(--acc);background:var(--aL)}
+.dz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dz-icon{font-size:34px;margin-bottom:10px;display:block}
+.dz-title{font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:5px}
+.dz-sub{font-size:13px;color:var(--mid)}
+.fmts{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.ftag{font-family:var(--mono);font-size:10px;background:var(--cream);color:var(--dark);border-radius:4px;padding:2px 8px}
+
+/* PROGRESS */
+#prog{display:none;margin-top:14px}
+.pb{height:4px;background:var(--cream);border-radius:2px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--acc),#ff6b3d);border-radius:2px;width:0%;transition:width .3s ease}
+.pl{font-family:var(--mono);font-size:11px;color:var(--mid);margin-top:5px;text-align:center}
+
+/* FILE INFO */
+#fi{display:none;margin-top:14px;background:var(--off);border:1px solid var(--cream);border-radius:var(--r);padding:14px 16px;animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.fir{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fn{font-weight:500;font-size:14px}.fs{font-family:var(--mono);font-size:11px;color:var(--mid)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:420px){.stats{grid-template-columns:1fr 1fr}}
+.stb{background:var(--w);border:1px solid var(--cream);border-radius:8px;padding:10px;text-align:center}
+.stv{font-family:var(--mono);font-size:15px;font-weight:500}
+.stl{font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+
+/* ERROR */
+.err{background:#fff5f5;border:1.5px solid #fcc;border-radius:var(--r);padding:11px 14px;font-size:13px;color:#c00;margin-top:10px;display:none}
+
+/* MAT GRID */
+.mg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media(max-width:480px){.mg{grid-template-columns:repeat(3,1fr)}}
+.mc{border:1.5px solid var(--cream);border-radius:var(--r);padding:12px 6px;text-align:center;cursor:pointer;transition:all .18s;background:var(--w)}
+.mc:hover{border-color:var(--sand);background:var(--off)}
+.mc.on{border-color:var(--acc);background:var(--aL)}
+.md{width:8px;height:8px;border-radius:50%;margin:0 auto 6px}
+.mn{font-family:var(--mono);font-size:12px;font-weight:500}
+.mpr{font-size:11px;color:var(--mid);margin-top:2px}
+
+/* INPUTS */
+.ig{margin-bottom:14px}
+.ig label{display:block;font-size:13px;font-weight:500;color:var(--dark);margin-bottom:6px}
+.ii{display:flex}
+.ii input{flex:1;border:1.5px solid var(--cream);border-right:none;border-radius:var(--r) 0 0 var(--r);padding:11px 14px;font-family:var(--mono);font-size:16px;font-weight:500;color:var(--ink);background:var(--w);outline:none;transition:border-color .18s;min-width:0}
+.ii input:focus{border-color:var(--acc)}
+.ii input::placeholder{color:var(--sand);font-weight:400}
+.iu{background:var(--cream);border:1.5px solid var(--cream);border-radius:0 var(--r) var(--r) 0;padding:11px 12px;font-family:var(--mono);font-size:12px;color:var(--mid);display:flex;align-items:center;flex-shrink:0;white-space:nowrap}
+.t2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:440px){.t2{grid-template-columns:1fr}}
+.sep{height:1px;background:var(--cream);margin:18px 0}
+.sl{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);margin-bottom:10px}
+
+/* INFILL CHIPS */
+.ic{display:flex;gap:6px;flex-wrap:wrap}
+.icp{font-family:var(--mono);font-size:12px;padding:6px 13px;border:1.5px solid var(--cream);border-radius:20px;cursor:pointer;transition:all .15s;background:var(--w);color:var(--dark)}
+.icp:hover{border-color:var(--sand)}
+.icp.on{background:var(--acc);border-color:var(--acc);color:#fff}
+
+/* URGENCY */
+.uo{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:380px){.uo{grid-template-columns:1fr}}
+.uc{border:1.5px solid var(--cream);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .18s;text-align:center}
+.uc:hover{border-color:var(--sand)}
+.uc.on{border-color:var(--acc);background:var(--aL)}
+.ui{font-size:20px;margin-bottom:3px}
+.un{font-size:13px;font-weight:500}
+.ud{font-family:var(--mono);font-size:10px;color:var(--mid);margin-top:2px}
+.um{font-family:var(--mono);font-size:10px;color:var(--acc);margin-top:3px}
+
+/* CALC BTN */
+.cbtn{width:100%;background:var(--acc);color:#fff;border:none;border-radius:var(--r);padding:16px;font-family:var(--display);font-size:17px;font-weight:800;letter-spacing:.04em;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(232,68,10,.3);display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px}
+.cbtn:hover{background:#d43a06;box-shadow:0 6px 28px rgba(232,68,10,.4);transform:translateY(-1px)}
+.cbtn:active{transform:translateY(0)}
+
+/* RESULTS */
+#res{display:none;animation:slideUp .4s ease forwards}
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.ph{background:var(--ink);border-radius:var(--r2);padding:30px 22px;text-align:center;position:relative;overflow:hidden;margin-top:20px}
+.ph::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 110%,rgba(232,68,10,.22) 0%,transparent 70%)}
+.phi{position:relative}
+.pe{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px}
+.pm{font-family:var(--display);font-size:clamp(42px,10vw,68px);font-weight:800;color:#fff;line-height:1;margin-bottom:5px}
+.pr{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.35);margin-bottom:14px}
+.pbs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pb2{font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.55)}
+.pb2.hot{background:var(--acc);color:#fff}
+
+/* BREAKDOWN */
+.bdown{background:var(--w);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);margin-top:14px}
+.brow{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--off);gap:12px}
+.brow:last-child{border-bottom:none}
+.brl{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--dark)}
+.bri{font-size:15px;width:24px;text-align:center}
+.brv{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--ink)}
+.brow.tot{background:var(--off);border-top:2px solid var(--cream)}
+.brow.tot .brl{font-weight:700;font-size:15px}
+.brow.tot .brv{color:var(--acc);font-size:15px}
+
+/* SPECS */
+.specs{background:var(--w);border-radius:var(--r2);padding:18px 20px;box-shadow:var(--sh);margin-top:12px}
+.sptitle{font-family:var(--display);font-size:14px;font-weight:700;margin-bottom:12px}
+.spg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:380px){.spg{grid-template-columns:1fr}}
+.spi{background:var(--off);border-radius:8px;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.spk{font-size:12px;color:var(--mid)}
+.spv{font-family:var(--mono);font-size:12px;font-weight:500}
+
+/* DISCLAIMER */
+.disc{background:var(--w);border-radius:var(--r);padding:13px 16px;margin-top:12px;border-left:3px solid var(--sand);font-size:12px;color:var(--mid);line-height:1.55}
+
+/* CTA */
+.cta{background:var(--acc);border-radius:var(--r2);padding:24px;margin-top:14px;text-align:center}
+.cta h3{font-family:var(--display);font-size:22px;font-weight:800;color:#fff;margin-bottom:6px}
+.cta p{font-size:14px;color:rgba(255,255,255,.65);margin-bottom:16px}
+.cta-link{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--acc);font-family:var(--display);font-size:14px;font-weight:700;padding:12px 24px;border-radius:var(--r);text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.cta-link:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(0,0,0,.2)}
+.cta-note{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.4);margin-top:10px}
+
+/* COPY BTN */
+.cpbtn{width:100%;background:var(--off);border:1.5px solid var(--cream);border-radius:var(--r);padding:12px;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;color:var(--dark);transition:all .18s;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.cpbtn:hover{border-color:var(--acc);color:var(--acc);background:var(--aL)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-family:var(--mono);font-size:13px;padding:10px 20px;border-radius:20px;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+footer{text-align:center;padding:28px 0 0;font-family:var(--mono);font-size:11px;color:var(--mid)}
+footer a{color:var(--acc);text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hi">
+    <a href="index.html" class="back">← Strona główna</a>
+    <div class="eyebrow">Błyskawiczna wycena online</div>
+    <h1>Sprawdź cenę<br>swojego wydruku 3D</h1>
+    <p class="hero-sub">Wgraj plik STL — automatycznie obliczymy wagę i objętość. Wybierz materiał i dowiedz się ile to kosztuje.</p>
+    <div class="steps">
+      <div class="step"><div class="sn">1</div>Wgraj STL</div>
+      <div class="step"><div class="sn">2</div>Wybierz materiał</div>
+      <div class="step"><div class="sn">3</div>Kliknij Oblicz</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- UPLOAD -->
+<div class="card">
+  <div class="ch"><div class="ci">📁</div><div><div class="ct">Wgraj plik modelu</div><div class="cd">Format STL · analiza geometrii w przeglądarce</div></div></div>
+  <div class="cb">
+    <div class="dz" id="dz" ondragover="onDO(event)" ondragleave="onDL(event)" ondrop="onDrop(event)">
+      <input type="file" id="fi2" accept=".stl" onchange="handleFile(this.files[0])">
+      <span class="dz-icon">🖨️</span>
+      <div class="dz-title">Przeciągnij plik STL tutaj</div>
+      <div class="dz-sub">lub kliknij, żeby wybrać z dysku</div>
+      <div class="fmts"><span class="ftag">STL BINARNY</span><span class="ftag">STL ASCII</span><span class="ftag">maks. 50 MB</span></div>
+    </div>
+    <div id="prog"><div class="pb"><div class="pf" id="pf"></div></div><div class="pl" id="pl">Analizuję…</div></div>
+    <div class="err" id="err"></div>
+    <div id="fi">
+      <div class="fir"><span style="font-size:22px">✅</span><div><div class="fn" id="fname">—</div><div class="fs" id="fsize">—</div></div></div>
+      <div class="stats">
+        <div class="stb"><div class="stv" id="sTri">—</div><div class="stl">Trójkąty</div></div>
+        <div class="stb"><div class="stv" id="sVol">—</div><div class="stl">Objętość cm³</div></div>
+        <div class="stb"><div class="stv" id="sWgt">—</div><div class="stl">Waga (g)</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MATERIAL -->
+<div class="card">
+  <div class="ch"><div class="ci">🧵</div><div><div class="ct">Materiał druku</div><div class="cd">Wybierz filament lub żywicę</div></div></div>
+  <div class="cb">
+    <div class="mg" id="mgrid">
+      <div class="mc on" onclick="selMat(this,'PLA',1.24,75)"><div class="md" style="background:#22c55e"></div><div class="mn">PLA</div><div class="mpr">~75 zł/kg</div></div>
+      <div class="mc" onclick="selMat(this,'PETG',1.27,90)"><div class="md" style="background:#3b82f6"></div><div class="mn">PETG</div><div class="mpr">~90 zł/kg</div></div>
+      <div class="mc" onclick="selMat(this,'ABS',1.04,85)"><div class="md" style="background:#f59e0b"></div><div class="mn">ABS</div><div class="mpr">~85 zł/kg</div></div>
+      <div class="mc" onclick="selMat(this,'TPU',1.21,120)"><div class="md" style="background:#ec4899"></div><div class="mn">TPU</div><div class="mpr">~120 zł/kg</div></div>
+      <div class="mc" onclick="selMat(this,'Resin',1.10,180)"><div class="md" style="background:#8b5cf6"></div><div class="mn">Resin</div><div class="mpr">~180 zł/kg</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PARAMETERS -->
+<div class="card">
+  <div class="ch"><div class="ci">⚙️</div><div><div class="ct">Parametry wydruku</div><div class="cd">STL uzupełni wagę automatycznie</div></div></div>
+  <div class="cb">
+    <div class="t2">
+      <div class="ig"><label>Waga modelu</label><div class="ii"><input type="number" id="wg" placeholder="— obliczona ze STL" min="0" step=".1"><span class="iu">g</span></div></div>
+      <div class="ig"><label>Szacowany czas druku</label><div class="ii"><input type="number" id="tm" placeholder="np. 4.5 h" min="0" step=".5"><span class="iu">h</span></div></div>
+    </div>
+    <div class="sep"></div>
+    <div class="sl">Wypełnienie modelu</div>
+    <div class="ic" id="iChips">
+      <div class="icp" onclick="selInfill(this,10)">10%</div>
+      <div class="icp on" onclick="selInfill(this,20)">20%</div>
+      <div class="icp" onclick="selInfill(this,40)">40%</div>
+      <div class="icp" onclick="selInfill(this,60)">60%</div>
+      <div class="icp" onclick="selInfill(this,80)">80%</div>
+      <div class="icp" onclick="selInfill(this,100)">100%</div>
+    </div>
+    <div class="sep"></div>
+    <div class="sl">Czas realizacji</div>
+    <div class="uo" id="urgOpts">
+      <div class="uc on" onclick="selUrg(this,1.0,'Standardowy','5–7 dni rob.')"><div class="ui">🗓️</div><div class="un">Standardowo</div><div class="ud">5–7 dni rob.</div><div class="um">×1.0</div></div>
+      <div class="uc" onclick="selUrg(this,1.25,'Przyspieszony','2–3 dni rob.')"><div class="ui">⚡</div><div class="un">Przyspieszony</div><div class="ud">2–3 dni rob.</div><div class="um">×1.25</div></div>
+      <div class="uc" onclick="selUrg(this,1.6,'Ekspres','24 godziny')"><div class="ui">🚀</div><div class="un">Ekspres</div><div class="ud">24 godziny</div><div class="um">×1.60</div></div>
+    </div>
+  </div>
+</div>
+
+<button class="cbtn" onclick="calc()">▶ Oblicz wycenę</button>
+
+<!-- RESULTS -->
+<div id="res">
+  <div class="ph">
+    <div class="phi">
+      <div class="pe">Szacowana cena netto</div>
+      <div class="pm" id="pMain">— zł</div>
+      <div class="pr" id="pRange"></div>
+      <div class="pbs">
+        <div class="pb2" id="bMat">—</div>
+        <div class="pb2" id="bTime">—</div>
+        <div class="pb2 hot" id="bUrg">Standardowy</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bdown">
+    <div class="brow"><div class="brl"><span class="bri">🧵</span>Koszt materiału</div><div class="brv" id="rM">—</div></div>
+    <div class="brow"><div class="brl"><span class="bri">⚙️</span>Koszt pracy drukarki</div><div class="brv" id="rW">—</div></div>
+    <div class="brow"><div class="brl"><span class="bri">⚡</span>Koszt energii</div><div class="brv" id="rE">—</div></div>
+    <div class="brow tot"><div class="brl">Cena netto (z marżą)</div><div class="brv" id="rT">—</div></div>
+  </div>
+
+  <div class="specs">
+    <div class="sptitle">Szczegóły wyceny</div>
+    <div class="spg">
+      <div class="spi"><span class="spk">Materiał</span><span class="spv" id="spM">—</span></div>
+      <div class="spi"><span class="spk">Waga</span><span class="spv" id="spW">—</span></div>
+      <div class="spi"><span class="spk">Czas druku</span><span class="spv" id="spT">—</span></div>
+      <div class="spi"><span class="spk">Wypełnienie</span><span class="spv" id="spI">—</span></div>
+      <div class="spi"><span class="spk">Realizacja</span><span class="spv" id="spU">—</span></div>
+      <div class="spi"><span class="spk">Cena brutto</span><span class="spv" id="spG">—</span></div>
+    </div>
+  </div>
+
+  <div class="disc">⚠️ Wycena jest orientacyjna. Ostateczna cena zależy od geometrii modelu, wymagań supportów, postprocessingu i dostępności materiału. Skontaktuj się po dokładną wycenę.</div>
+
+  <button class="cpbtn" onclick="copyQ()">📋 Kopiuj wycenę do schowka</button>
+
+  <div class="cta">
+    <h3>Chcesz złożyć zamówienie?</h3>
+    <p>Wyślij nam plik i szczegóły — odpiszemy w ciągu 24h</p>
+    <a href="mailto:twoj@email.pl?subject=Zamówienie druku 3D" class="cta-link">✉️ Napisz do nas</a>
+    <div class="cta-note">📞 +48 000 000 000</div>
+  </div>
+</div>
+
+<footer><p>© 2025 Twoja Firma Druk 3D · <a href="index.html">Strona główna</a> · <a href="kalkulator.html">Panel właściciela</a></p></footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// STATE
+const S={mat:'PLA',density:1.24,price:75,infill:20,urgMult:1.0,urgLabel:'Standardowy (5–7 dni)',volCm3:null};
+const MATS={PLA:{d:1.24,p:75,h:12},PETG:{d:1.27,p:90,h:13},ABS:{d:1.04,p:85,h:13},TPU:{d:1.21,p:120,h:15},Resin:{d:1.10,p:180,h:18}};
+
+function selMat(el,n,d,p){document.querySelectorAll('.mc').forEach(c=>c.classList.remove('on'));el.classList.add('on');S.mat=n;S.density=d;S.price=p;if(S.volCm3){const w=(S.volCm3*d*(0.30+S.infill/100*0.70)).toFixed(1);document.getElementById('wg').value=w;document.getElementById('sWgt').textContent=w+' g'}}
+function selInfill(el,v){document.querySelectorAll('.icp').forEach(c=>c.classList.remove('on'));el.classList.add('on');S.infill=v;if(S.volCm3){const w=(S.volCm3*S.density*(0.30+v/100*0.70)).toFixed(1);document.getElementById('wg').value=w;document.getElementById('sWgt').textContent=w+' g'}}
+function selUrg(el,m,n,d){document.querySelectorAll('.uc').forEach(c=>c.classList.remove('on'));el.classList.add('on');S.urgMult=m;S.urgLabel=n+' ('+d+')'}
+
+// DRAG DROP
+function onDO(e){e.preventDefault();document.getElementById('dz').classList.add('over')}
+function onDL(e){document.getElementById('dz').classList.remove('over')}
+function onDrop(e){e.preventDefault();document.getElementById('dz').classList.remove('over');const f=e.dataTransfer.files[0];if(f)handleFile(f)}
+
+// FILE HANDLING
+function handleFile(file){
+  if(!file)return;
+  if(!file.name.toLowerCase().endsWith('.stl')){showErr('Proszę wybrać plik .STL');return}
+  if(file.size>52428800){showErr('Plik za duży (maks. 50 MB)');return}
+  hideErr();showProg('Wczytywanie pliku…',15);
+  document.getElementById('fname').textContent=file.name;
+  document.getElementById('fsize').textContent=(file.size/1024/1024).toFixed(2)+' MB';
+  const r=new FileReader();
+  r.onload=e=>{showProg('Parsowanie geometrii STL…',45);setTimeout(()=>{
+    try{const res=parseSTL(e.target.result);showProg('Obliczanie objętości…',80);setTimeout(()=>{finishParse(res);showProg('Gotowe!',100);setTimeout(hideProg,600)},120)}
+    catch(err){hideProg();showErr('Błąd parsowania: '+err.message)}
+  },80)};
+  r.readAsArrayBuffer(file);
+}
+
+// STL PARSER
+function parseSTL(buf){
+  const a=new Uint8Array(buf);
+  const bin=isBinary(a,buf);
+  const tris=bin?parseBin(buf):parseAsc(new TextDecoder().decode(buf));
+  if(!tris.length)throw new Error('Nie znaleziono trójkątów');
+  let vol=0;
+  for(const t of tris)vol+=signedVol(t[0],t[1],t[2]);
+  return{triangles:tris.length,volumeCm3:Math.abs(vol)/1000};
+}
+
+function isBinary(a,buf){
+  for(let i=0;i<5;i++)if(a[i]===0)return true;
+  const h=String.fromCharCode(...a.slice(0,80));
+  if(!h.toLowerCase().trim().startsWith('solid'))return true;
+  const tc=new DataView(buf).getUint32(80,true);
+  return Math.abs(80+4+tc*50-a.length)<10;
+}
+
+function parseBin(buf){
+  const v=new DataView(buf);const n=v.getUint32(80,true);const t=[];let o=84;
+  for(let i=0;i<n;i++){o+=12;const a=[v.getFloat32(o,true),v.getFloat32(o+4,true),v.getFloat32(o+8,true)];o+=12;const b=[v.getFloat32(o,true),v.getFloat32(o+4,true),v.getFloat32(o+8,true)];o+=12;const c=[v.getFloat32(o,true),v.getFloat32(o+4,true),v.getFloat32(o+8,true)];o+=14;t.push([a,b,c])}
+  return t;
+}
+
+function parseAsc(txt){
+  const t=[];const re=/vertex\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)/g;
+  let m,vs=[];
+  while((m=re.exec(txt))!==null){vs.push([parseFloat(m[1]),parseFloat(m[2]),parseFloat(m[3])]);if(vs.length===3){t.push([vs[0],vs[1],vs[2]]);vs=[]}}
+  return t;
+}
+
+function signedVol(p1,p2,p3){return(p1[0]*(p2[1]*p3[2]-p2[2]*p3[1])+p2[0]*(p3[1]*p1[2]-p3[2]*p1[1])+p3[0]*(p1[1]*p2[2]-p1[2]*p2[1]))/6}
+
+function finishParse(res){
+  S.volCm3=res.volumeCm3;
+  const f=0.30+S.infill/100*0.70;
+  const w=(res.volumeCm3*S.density*f).toFixed(1);
+  document.getElementById('sTri').textContent=res.triangles.toLocaleString('pl-PL');
+  document.getElementById('sVol').textContent=res.volumeCm3.toFixed(2);
+  document.getElementById('sWgt').textContent=w+' g';
+  document.getElementById('wg').value=w;
+  document.getElementById('fi').style.display='block';
+  toast('✓ Plik przeanalizowany — waga obliczona automatycznie');
+}
+
+function showProg(l,p){document.getElementById('prog').style.display='block';document.getElementById('pf').style.width=p+'%';document.getElementById('pl').textContent=l}
+function hideProg(){document.getElementById('prog').style.display='none'}
+function showErr(m){const e=document.getElementById('err');e.textContent='⚠ '+m;e.style.display='block'}
+function hideErr(){document.getElementById('err').style.display='none'}
+
+// CALC
+function fmt(n){return n.toFixed(2).replace('.',',')+' zł'}
+function calc(){
+  const w=parseFloat(document.getElementById('wg').value)||0;
+  const t=parseFloat(document.getElementById('tm').value)||(w/15)||1;
+  if(!w){toast('⚠ Wgraj plik STL lub wpisz wagę');return}
+  const m=MATS[S.mat];
+  const cM=w/1000*m.p;const cW=t*m.h;const cE=t*0.35*0.82;
+  const cB=cM+cW+cE;const net=cB*1.35*S.urgMult;const br=net*1.23;
+  document.getElementById('pMain').textContent=fmt(net);
+  document.getElementById('pRange').textContent='Przedział: '+fmt(net*.85)+' — '+fmt(net*1.15);
+  document.getElementById('bMat').textContent=S.mat;
+  document.getElementById('bTime').textContent=t.toFixed(1)+'h druku';
+  document.getElementById('bUrg').textContent=S.urgMult>1?'Ekspres ×'+S.urgMult:'Standardowy';
+  document.getElementById('rM').textContent=fmt(cM);
+  document.getElementById('rW').textContent=fmt(cW);
+  document.getElementById('rE').textContent=fmt(cE);
+  document.getElementById('rT').textContent=fmt(net);
+  document.getElementById('spM').textContent=S.mat;
+  document.getElementById('spW').textContent=w.toFixed(1)+' g';
+  document.getElementById('spT').textContent=t.toFixed(1)+' h';
+  document.getElementById('spI').textContent=S.infill+'%';
+  document.getElementById('spU').textContent=S.urgLabel;
+  document.getElementById('spG').textContent=fmt(br);
+  const r=document.getElementById('res');r.style.display='block';
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+
+function copyQ(){
+  const w=parseFloat(document.getElementById('wg').value)||0;
+  const t=parseFloat(document.getElementById('tm').value)||(w/15)||1;
+  const m=MATS[S.mat];const cM=w/1000*m.p,cW=t*m.h,cE=t*0.35*0.82;
+  const net=(cM+cW+cE)*1.35*S.urgMult;
+  const txt=`=== WYCENA DRUKU 3D ===\nData: ${new Date().toLocaleDateString('pl-PL')}\nMateriał: ${S.mat} | Waga: ${w.toFixed(1)}g | Czas: ${t.toFixed(1)}h\nWypełnienie: ${S.infill}% | Realizacja: ${S.urgLabel}\n\nKoszt materiału: ${fmt(cM)}\nKoszt pracy:     ${fmt(cW)}\nKoszt energii:   ${fmt(cE)}\nCena netto:      ${fmt(net)}\nCena brutto:     ${fmt(net*1.23)}\n\n⚠ Wycena orientacyjna\nKontakt: twoj@email.pl | +48 000 000 000`;
+  navigator.clipboard.writeText(txt).then(()=>toast('✓ Skopiowano do schowka')).catch(()=>toast('⚠ Błąd'));
+}
+
+let tt;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),2700)}
+</script>
+</body>
+</html>

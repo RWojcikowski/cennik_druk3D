@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Druk 3D — Wycena & Narzędzia</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0e0b1c;--off:#f6f5f2;--w:#fff;--cream:#eeeae0;--sand:#d0ccc0;
+  --mid:#888480;--acc:#7c3aed;--acc2:#9d5ff5;--accL:rgba(124,58,237,.10);
+  --red:#e8440a;--redL:rgba(232,68,10,.10);
+  --sans:'DM Sans',sans-serif;--mono:'DM Mono',monospace;--display:'Syne',sans-serif;
+  --r:14px;--r2:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--off);color:var(--ink);font-family:var(--sans);min-height:100vh}
+
+/* HERO */
+.hero{
+  background:var(--ink);min-height:100vh;display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 70% at 15% 30%,rgba(124,58,237,.2) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 60% at 85% 70%,rgba(232,68,10,.14) 0%,transparent 55%),
+    repeating-linear-gradient(45deg,transparent,transparent 32px,rgba(255,255,255,.015) 32px,rgba(255,255,255,.015) 33px);
+}
+.dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.08) 1px,transparent 1px);background-size:28px 28px}
+
+/* NAV */
+nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:24px 40px;flex-wrap:wrap;gap:12px}
+@media(max-width:600px){nav{padding:20px 20px}}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:38px;height:38px;background:rgba(124,58,237,.25);border:1px solid rgba(124,58,237,.5);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.brand-t{font-family:var(--display);font-size:18px;font-weight:800;color:#fff}
+.brand-t span{color:var(--acc2)}
+.nav-tag{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.3);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:3px;padding:2px 7px;margin-top:3px;display:block;letter-spacing:.07em}
+.nav-r{display:flex;gap:8px}
+.np{font-family:var(--mono);font-size:11px;padding:8px 16px;border-radius:20px;text-decoration:none;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);transition:all .18s;letter-spacing:.04em}
+.np:hover{border-color:rgba(255,255,255,.3);color:#fff}
+.np.a{border-color:rgba(124,58,237,.6);background:rgba(124,58,237,.2);color:var(--acc2)}
+
+/* HERO CONTENT */
+.hero-c{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px 80px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc2);background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.35);border-radius:20px;padding:5px 14px;margin-bottom:20px}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--acc2)}
+h1{font-family:var(--display);font-size:clamp(36px,8vw,80px);font-weight:800;line-height:1.0;color:#fff;letter-spacing:-.02em;margin-bottom:20px;max-width:800px}
+h1 .hl{color:var(--acc2)}
+.hero-sub{font-size:clamp(15px,2.5vw,18px);color:rgba(255,255,255,.5);line-height:1.7;max-width:520px;margin-bottom:48px;font-weight:300}
+
+/* CTA CARDS */
+.cta-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:640px}
+@media(max-width:540px){.cta-cards{grid-template-columns:1fr}}
+.cc{border-radius:var(--r2);padding:28px 24px;text-decoration:none;transition:all .22s;display:block;text-align:left;position:relative;overflow:hidden}
+.cc::after{content:'→';position:absolute;bottom:20px;right:20px;font-size:18px;opacity:.4;transition:all .2s}
+.cc:hover::after{opacity:1;transform:translateX(3px)}
+.cc-a{background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(157,95,245,.12));border:1px solid rgba(124,58,237,.45)}
+.cc-b{background:linear-gradient(135deg,rgba(232,68,10,.22),rgba(255,100,40,.1));border:1px solid rgba(232,68,10,.4)}
+.cc:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.35)}
+.cc-icon{font-size:26px;margin-bottom:12px;display:block}
+.cc-tag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.cc-a .cc-tag{color:var(--acc2)}
+.cc-b .cc-tag{color:#ff7040}
+.cc-title{font-family:var(--display);font-size:20px;font-weight:800;color:#fff;margin-bottom:6px;line-height:1.1}
+.cc-desc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.55}
+
+/* SCROLL HINT */
+.scroll-hint{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:5px;padding-bottom:28px;color:rgba(255,255,255,.2);font-family:var(--mono);font-size:10px;letter-spacing:.1em;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+/* FEATURES SECTION */
+.features{padding:80px 24px;max-width:960px;margin:0 auto}
+.sec-label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);text-align:center;margin-bottom:10px}
+.sec-title{font-family:var(--display);font-size:clamp(26px,5vw,44px);font-weight:800;text-align:center;margin-bottom:12px;letter-spacing:-.01em}
+.sec-sub{text-align:center;color:var(--mid);font-size:15px;max-width:480px;margin:0 auto 52px;line-height:1.65;font-weight:300}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:680px){.feat-grid{grid-template-columns:1fr}}
+.feat{background:var(--w);border:1px solid var(--cream);border-radius:var(--r2);padding:26px 22px;transition:all .22s}
+.feat:hover{border-color:var(--sand);box-shadow:0 8px 28px rgba(14,11,28,.07);transform:translateY(-2px)}
+.feat-icon{font-size:26px;margin-bottom:14px;display:block}
+.feat-title{font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:6px}
+.feat-desc{font-size:13px;color:var(--mid);line-height:1.6}
+.feat-tag{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:4px;letter-spacing:.06em;font-weight:500}
+.ft-v{background:var(--accL);color:var(--acc)}
+.ft-r{background:var(--redL);color:var(--red)}
+.ft-g{background:rgba(26,122,74,.1);color:#1a7a4a}
+
+/* HOW-TO SECTION */
+.howto{background:var(--ink);padding:80px 24px;color:#fff}
+.howto-inner{max-width:800px;margin:0 auto}
+.howto .sec-label{color:var(--acc2)}
+.howto .sec-title{color:#fff}
+.howto .sec-sub{color:rgba(255,255,255,.4)}
+.steps-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.steps-list{grid-template-columns:1fr}}
+.step-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--r2);padding:22px;position:relative}
+.step-num{font-family:var(--mono);font-size:36px;font-weight:700;color:rgba(124,58,237,.3);line-height:1;margin-bottom:10px}
+.step-title{font-family:var(--display);font-size:16px;font-weight:700;color:#fff;margin-bottom:6px}
+.step-desc{font-size:13px;color:rgba(255,255,255,.4);line-height:1.6}
+
+/* FOOTER */
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.07);padding:28px 24px;text-align:center}
+footer p{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.25);letter-spacing:.04em}
+footer a{color:var(--acc2);text-decoration:none}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="dots"></div>
+  <nav>
+    <div class="brand">
+      <div class="logo">🖨️</div>
+      <div>
+        <div class="brand-t">Druk<span>3D</span></div>
+        <span class="nav-tag">KAMIENNA GÓRA · DOLNY ŚLĄSK</span>
+      </div>
+    </div>
+    <div class="nav-r">
+      <a href="wycena.html" class="np">Wycena online</a>
+      <a href="kalkulator.html" class="np a">🔐 Panel</a>
+    </div>
+  </nav>
+
+  <div class="hero-c">
+    <div class="badge"><div class="badge-dot"></div>Usługi druku 3D · FDM · Resin</div>
+    <h1>Twój model.<br><span class="hl">Nasza drukarka.</span></h1>
+    <p class="hero-sub">Profesjonalny druk 3D na zamówienie. Sprawdź cenę swojego projektu w kilka sekund — bez rejestracji, bez czekania.</p>
+    <div class="cta-cards">
+      <a href="wycena.html" class="cc cc-b">
+        <span class="cc-icon">📐</span>
+        <div class="cc-tag">Dla klienta</div>
+        <div class="cc-title">Wycena online</div>
+        <div class="cc-desc">Wgraj plik STL i sprawdź szacunkową cenę wydruku</div>
+      </a>
+      <a href="kalkulator.html" class="cc cc-a">
+        <span class="cc-icon">🔧</span>
+        <div class="cc-tag">Panel właściciela</div>
+        <div class="cc-title">Kalkulator kosztów</div>
+        <div class="cc-desc">Szczegółowe obliczenia: materiał, praca, energia, marża</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">↓ &nbsp; więcej informacji</div>
+</div>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="sec-label">Co oferujemy</div>
+  <h2 class="sec-title">Druk 3D dla każdego projektu</h2>
+  <p class="sec-sub">Od prototypów po elementy seryjne — realizujemy zamówienia szybko i w dobrej cenie.</p>
+  <div class="feat-grid">
+    <div class="feat">
+      <span class="feat-icon">🧵</span>
+      <div class="feat-title">Wiele materiałów</div>
+      <div class="feat-desc">PLA, PETG, ABS, TPU (Flex) oraz żywica UV — dopasujemy materiał do Twoich wymagań wytrzymałościowych i estetycznych.</div>
+      <span class="feat-tag ft-v">5 materiałów</span>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">📐</span>
+      <div class="feat-title">Wycena z pliku STL</div>
+      <div class="feat-desc">Wgraj model bezpośrednio na stronie — automatycznie obliczymy objętość, wagę i szacowany koszt wydruku.</div>
+      <span class="feat-tag ft-r">Analiza online</span>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">⚡</span>
+      <div class="feat-title">Szybka realizacja</div>
+      <div class="feat-desc">Standardowo 5–7 dni roboczych. Potrzebujesz szybciej? Oferujemy tryb przyspieszony (2–3 dni) i ekspres (24h).</div>
+      <span class="feat-tag ft-g">Ekspres 24h</span>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🏗️</span>
+      <div class="feat-title">Prototypy i produkcja</div>
+      <div class="feat-desc">Obsługujemy zarówno jednostkowe prototypy jak i krótkie serie — uchwyty, obudowy, elementy mechaniczne.</div>
+      <span class="feat-tag ft-v">B2B i B2C</span>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">🎨</span>
+      <div class="feat-title">Postprocessing</div>
+      <div class="feat-desc">Obróbka powierzchni, szlifowanie, malowanie, usuwanie supportów i innych śladów druku na życzenie.</div>
+      <span class="feat-tag ft-g">Na życzenie</span>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">📍</span>
+      <div class="feat-title">Kamienna Góra i okolice</div>
+      <div class="feat-desc">Działamy lokalnie — Kamienna Góra, Lubawka, Mieroszów, Czarny Bór. Odbiór osobisty lub wysyłka kurierem.</div>
+      <span class="feat-tag ft-r">Dolny Śląsk</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO ORDER -->
+<section class="howto">
+  <div class="howto-inner">
+    <div class="sec-label">Jak zamówić</div>
+    <h2 class="sec-title">Proste zamówienie w 4 krokach</h2>
+    <p class="sec-sub" style="margin-bottom:40px">Bez zbędnych formalności — wyślij model i czekaj na gotowy wydruk</p>
+    <div class="steps-list">
+      <div class="step-card"><div class="step-num">01</div><div class="step-title">Przygotuj plik</div><div class="step-desc">Plik STL lub 3MF z Twojego programu CAD lub pobrany z Thingiverse / Printables.</div></div>
+      <div class="step-card"><div class="step-num">02</div><div class="step-title">Sprawdź wycenę</div><div class="step-desc">Wgraj plik w kalkulatorze wyceny i sprawdź szacunkową cenę bez rejestracji.</div></div>
+      <div class="step-card"><div class="step-num">03</div><div class="step-title">Napisz do nas</div><div class="step-desc">Wyślij plik mailem lub przez formularz. Potwierdzimy wycenę i czas realizacji.</div></div>
+      <div class="step-card"><div class="step-num">04</div><div class="step-title">Odbierz wydruk</div><div class="step-desc">Gotowy model dostarczamy kurierem lub możesz odebrać go osobiście.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Twoja Firma · Druk 3D · Kamienna Góra · <a href="mailto:twoj@email.pl">twoj@email.pl</a> · <a href="tel:+48000000000">+48 000 000 000</a></p>
+</footer>
+
+</body>
+</html>

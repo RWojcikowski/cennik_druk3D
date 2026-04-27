@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel — Kalkulator Kosztów Druku 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#08060f;--bg1:#0e0b1c;--bg2:#131028;--bg3:#191532;--bg4:#20193c;
+  --border:#2a2450;--border2:#3d3570;
+  --v:#7c3aed;--v2:#9d5ff5;--v3:#c4b0ff;
+  --vg:rgba(124,58,237,.18);--vg2:rgba(124,58,237,.09);--vg3:rgba(124,58,237,.04);
+  --green:#10b981;--text:#e8e4ff;--text2:#9890c0;--text3:#54507a;
+  --mono:'JetBrains Mono',monospace;--display:'Syne',sans-serif;--sans:'DM Sans',sans-serif;
+  --r:10px;--r2:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg0);color:var(--text);font-family:var(--sans);min-height:100vh;
+  background-image:
+    radial-gradient(ellipse 70% 40% at 50% 0%,rgba(124,58,237,.14) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 60% at 95% 85%,rgba(124,58,237,.07) 0%,transparent 50%);
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(42,36,80,.4) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(42,36,80,.4) 1px,transparent 1px);
+  background-size:44px 44px;z-index:0;
+}
+.wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:24px 16px 80px}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:12px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{width:42px;height:42px;background:var(--vg);border:1px solid var(--v);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.brand-name{font-family:var(--display);font-size:20px;font-weight:800}
+.brand-name span{color:var(--v2)}
+.brand-tag{font-family:var(--mono);font-size:9px;color:var(--text3);background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;margin-top:4px;display:block;letter-spacing:.08em}
+.nav-links{display:flex;gap:7px;flex-wrap:wrap}
+.nl{font-family:var(--mono);font-size:11px;padding:7px 13px;border-radius:20px;text-decoration:none;color:var(--text2);border:1px solid var(--border);background:var(--bg2);transition:all .18s;letter-spacing:.04em}
+.nl:hover{border-color:var(--border2);color:var(--text)}
+.nl.on{background:var(--vg2);border-color:var(--v2);color:var(--v2)}
+
+/* SECTION HEADING */
+.sh{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.sh-n{font-family:var(--mono);font-size:10px;background:var(--vg);border:1px solid var(--v);color:var(--v2);border-radius:5px;padding:2px 7px;letter-spacing:.05em;flex-shrink:0}
+.sh-t{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase}
+.sh::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+
+/* MAT PILLS */
+.mats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+.mp{font-family:var(--mono);font-size:11px;font-weight:600;padding:7px 15px;background:var(--bg2);border:1px solid var(--border);color:var(--text2);border-radius:20px;cursor:pointer;transition:all .18s;letter-spacing:.04em}
+.mp:hover{border-color:var(--border2);color:var(--text)}
+.mp.on{background:var(--vg2);border-color:var(--v2);color:var(--v2)}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+@media(max-width:580px){.g2,.g3{grid-template-columns:1fr}}
+
+/* FIELD */
+.f{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;transition:border-color .18s,background .18s}
+.f:focus-within{border-color:var(--v);background:var(--bg3)}
+.f label{display:block;font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
+.ir{display:flex;align-items:center;gap:6px}
+.f input{flex:1;background:none;border:none;outline:none;font-family:var(--mono);font-size:19px;font-weight:700;color:var(--text);min-width:0}
+.f input::placeholder{color:var(--text3);font-weight:400;font-size:16px}
+.unit{font-family:var(--mono);font-size:11px;color:var(--text2);background:var(--bg0);border:1px solid var(--border);border-radius:5px;padding:3px 8px;flex-shrink:0;white-space:nowrap}
+.tip{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:5px}
+
+/* SLIDER FIELD */
+.sf{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
+.sf:focus-within{border-color:var(--v)}
+.sf-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sf-top label{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
+.sf-val{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--v2)}
+input[type=range]{-webkit-appearance:none;width:100%;height:5px;background:var(--bg4);border-radius:3px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--v2);box-shadow:0 0 10px rgba(124,58,237,.6);cursor:pointer}
+.sm{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:5px}
+.mbar{height:5px;background:var(--bg0);border-radius:3px;overflow:hidden;margin-top:10px}
+.mfill{height:100%;background:linear-gradient(90deg,var(--v),var(--v2));border-radius:3px;transition:width .4s ease;width:30%}
+
+.sb{margin-bottom:22px}
+
+/* DEFAULTS */
+#defP{display:none;background:var(--bg2);border:1px solid var(--v);border-radius:var(--r2);padding:18px;margin-bottom:16px;animation:fu .25s ease}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* BUTTONS */
+.actions{display:flex;gap:10px;margin:24px 0;flex-wrap:wrap}
+.btn{font-family:var(--display);font-weight:800;font-size:14px;letter-spacing:.07em;text-transform:uppercase;padding:13px 24px;border-radius:var(--r);border:none;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.bp{background:linear-gradient(135deg,var(--v),var(--v2));color:#fff;flex:1;justify-content:center;min-width:120px;box-shadow:0 4px 24px rgba(124,58,237,.4)}
+.bp:hover{box-shadow:0 6px 32px rgba(124,58,237,.55);transform:translateY(-1px)}
+.bg{background:var(--bg2);border:1px solid var(--border);color:var(--text2)}
+.bg:hover{border-color:var(--border2);color:var(--text)}
+.bsm{font-family:var(--mono);font-size:11px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;gap:5px}
+.bsm:hover{border-color:var(--v);color:var(--v2)}
+
+/* RESULTS */
+#res{display:none;animation:fu .35s ease}
+.pcards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:460px){.pcards{grid-template-columns:1fr}}
+.pc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:22px;text-align:center}
+.pc.star{border-color:var(--v2);background:var(--vg2);box-shadow:0 0 32px rgba(124,58,237,.12)}
+.pc .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.pc.star .lbl{color:var(--v3)}
+.pc .val{font-family:var(--display);font-size:clamp(26px,5vw,38px);font-weight:800;color:var(--text)}
+.pc.star .val{color:var(--v2)}
+.pc .sub{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:6px}
+
+.bd{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:12px}
+.br{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border);gap:12px}
+.br:last-child{border-bottom:none}
+.brl{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text2)}
+.bi{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.brv{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text)}
+.br.tot{background:var(--vg3);border-top:1px solid var(--v)}
+.br.tot .brl{font-weight:700;color:var(--text)}
+.br.tot .brv{color:var(--v2);font-size:16px}
+
+.formula-box{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;font-family:var(--mono);font-size:12px;color:var(--text2);line-height:1.9;white-space:pre-wrap}
+
+.ra{display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg3);border:1px solid var(--v2);color:var(--v2);font-family:var(--mono);font-size:12px;padding:9px 18px;border-radius:20px;transition:transform .3s;z-index:100;white-space:nowrap}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--text3);text-align:center}
+
+@media print{
+  body::before{display:none}body{background:#fff;color:#111}
+  nav,.actions,.ra,#defP,footer{display:none!important}
+  #res{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <div class="brand">
+    <div class="brand-icon">🖨️</div>
+    <div>
+      <div class="brand-name">Druk<span>3D</span> · Panel</div>
+      <span class="brand-tag">KALKULATOR KOSZTÓW · v1.0 · PLN</span>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nl">← Strona główna</a>
+    <a href="wycena.html" class="nl">Widok klienta →</a>
+    <a href="kalkulator.html" class="nl on">Panel właściciela</a>
+  </div>
+</nav>
+
+<!-- DEFAULTS -->
+<div id="defP">
+  <div class="sh"><span class="sh-n">CFG</span><span class="sh-t">Ustawienia domyślne</span></div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="f"><label>Cena materiału</label><div class="ir"><input type="number" id="dm" placeholder="75"><span class="unit">zł/kg</span></div></div>
+    <div class="f"><label>Roboczogodzina</label><div class="ir"><input type="number" id="dh" placeholder="12"><span class="unit">zł/h</span></div></div>
+    <div class="f"><label>Cena energii</label><div class="ir"><input type="number" id="de" placeholder="0.80"><span class="unit">zł/kWh</span></div></div>
+    <div class="f"><label>Marża</label><div class="ir"><input type="number" id="dg" placeholder="30"><span class="unit">%</span></div></div>
+  </div>
+  <button class="btn bg" onclick="saveDef()" style="margin-right:8px;padding:9px 18px;font-size:13px">💾 Zapisz domyślne</button>
+  <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">Dane w localStorage przeglądarki</span>
+</div>
+<div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+  <button class="bsm" onclick="toggleDef()">⚙ Ustawienia domyślne</button>
+</div>
+
+<!-- MATERIAL -->
+<div class="sh"><span class="sh-n">MAT</span><span class="sh-t">Wybierz materiał</span></div>
+<div class="mats" id="matRow">
+  <button class="mp on" onclick="setMat(this,'PLA',75)">PLA · 75 zł/kg</button>
+  <button class="mp" onclick="setMat(this,'PETG',90)">PETG · 90 zł/kg</button>
+  <button class="mp" onclick="setMat(this,'ABS',85)">ABS · 85 zł/kg</button>
+  <button class="mp" onclick="setMat(this,'TPU',120)">TPU · 120 zł/kg</button>
+  <button class="mp" onclick="setMat(this,'Resin',180)">Resin · 180 zł/kg</button>
+</div>
+
+<!-- 01 -->
+<div class="sb">
+  <div class="sh"><span class="sh-n">01</span><span class="sh-t">Parametry modelu</span></div>
+  <div class="g2">
+    <div class="f"><label>Waga modelu</label><div class="ir"><input type="number" id="wg" placeholder="45" step=".1"><span class="unit">g</span></div><div class="tip">Waga gotowego wydruku</div></div>
+    <div class="f"><label>Czas druku</label><div class="ir"><input type="number" id="tm" placeholder="3.5" step=".5"><span class="unit">h</span></div><div class="tip">Wg. Cura / PrusaSlicer</div></div>
+  </div>
+</div>
+
+<!-- 02 -->
+<div class="sb">
+  <div class="sh"><span class="sh-n">02</span><span class="sh-t">Koszty materiału i pracy</span></div>
+  <div class="g3">
+    <div class="f"><label>Cena materiału</label><div class="ir"><input type="number" id="mp" placeholder="75" step=".01"><span class="unit">zł/kg</span></div></div>
+    <div class="f"><label>Roboczogodzina</label><div class="ir"><input type="number" id="hr" placeholder="12" step=".01"><span class="unit">zł/h</span></div></div>
+    <div class="f"><label>Dodatkowy koszt</label><div class="ir"><input type="number" id="ex" placeholder="0" step=".01"><span class="unit">zł</span></div><div class="tip">Projekt / obróbka / pakowanie</div></div>
+  </div>
+</div>
+
+<!-- 03 -->
+<div class="sb">
+  <div class="sh"><span class="sh-n">03</span><span class="sh-t">Zużycie energii</span></div>
+  <div class="g2">
+    <div class="f"><label>Zużycie energii</label><div class="ir"><input type="number" id="en" placeholder="0.35" step=".01"><span class="unit">kWh</span></div><div class="tip">Łącznie przez całe zlecenie</div></div>
+    <div class="f"><label>Cena energii</label><div class="ir"><input type="number" id="ep" placeholder="0.80" step=".01"><span class="unit">zł/kWh</span></div></div>
+  </div>
+</div>
+
+<!-- 04 -->
+<div class="sb">
+  <div class="sh"><span class="sh-n">04</span><span class="sh-t">Marża zysku</span></div>
+  <div class="sf">
+    <div class="sf-top">
+      <label>Marża zysku</label>
+      <span class="sf-val" id="mgLbl">30%</span>
+    </div>
+    <input type="range" id="mg" min="0" max="200" value="30" step="1"
+      oninput="document.getElementById('mgLbl').textContent=this.value+'%';document.getElementById('mf').style.width=Math.min(this.value/2,100)+'%'">
+    <div class="sm"><span>0%</span><span>50%</span><span>100%</span><span>150%</span><span>200%</span></div>
+    <div class="mbar"><div class="mfill" id="mf" style="width:15%"></div></div>
+  </div>
+</div>
+
+<!-- ACTIONS -->
+<div class="actions">
+  <button class="btn bp" onclick="calc()">▶ Oblicz wycenę</button>
+  <button class="btn bg" onclick="clearAll()">✕ Wyczyść</button>
+  <button class="btn bg" onclick="loadEx()">📋 Przykład</button>
+</div>
+
+<!-- RESULTS -->
+<div id="res">
+  <div class="sh"><span class="sh-n">05</span><span class="sh-t">Wyniki wyceny</span></div>
+  <div class="ra">
+    <button class="bsm" onclick="copyRes()">📋 Kopiuj</button>
+    <button class="bsm" onclick="window.print()">📄 PDF</button>
+  </div>
+  <div class="pcards">
+    <div class="pc"><div class="lbl">Koszt całkowity (netto)</div><div class="val" id="rCost">—</div><div class="sub">przed marżą</div></div>
+    <div class="pc star"><div class="lbl">Cena dla klienta</div><div class="val" id="rFin">—</div><div class="sub" id="rGross">brutto: —</div></div>
+  </div>
+  <div class="bd">
+    <div class="br"><div class="brl"><div class="bi" style="background:rgba(124,58,237,.15)">🧵</div>Koszt materiału</div><div class="brv" id="rMat">—</div></div>
+    <div class="br"><div class="brl"><div class="bi" style="background:rgba(157,95,245,.12)">⚙️</div>Koszt pracy drukarki</div><div class="brv" id="rWork">—</div></div>
+    <div class="br"><div class="brl"><div class="bi" style="background:rgba(16,185,129,.12)">⚡</div>Koszt energii</div><div class="brv" id="rEn">—</div></div>
+    <div class="br"><div class="brl"><div class="bi" style="background:rgba(244,63,94,.12)">➕</div>Dodatkowy koszt</div><div class="brv" id="rEx">—</div></div>
+    <div class="br tot"><div class="brl"><div class="bi" style="background:var(--vg)">💜</div><strong>Cena końcowa (netto)</strong></div><div class="brv" id="rNet">—</div></div>
+  </div>
+  <div class="formula-box" id="fbox"></div>
+</div>
+
+<footer>Kalkulator Druku 3D · Panel właściciela · Dane obliczane lokalnie</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let curMat='PLA';
+function gv(id,d=0){return parseFloat(document.getElementById(id).value)||d}
+function fmt(n){return n.toFixed(2).replace('.',',')+' zł'}
+function setMat(el,n,p){
+  document.querySelectorAll('.mp').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');curMat=n;
+  document.getElementById('mp').value=p;
+  toast(`Materiał: ${n} · ${p} zł/kg`);
+}
+function toggleDef(){const p=document.getElementById('defP');p.style.display=p.style.display==='block'?'none':'block'}
+function saveDef(){
+  localStorage.setItem('p3dv2',JSON.stringify({m:document.getElementById('dm').value,h:document.getElementById('dh').value,e:document.getElementById('de').value,g:document.getElementById('dg').value}));
+  toast('✓ Ustawienia zapisane');
+}
+function loadDef(){
+  try{const d=JSON.parse(localStorage.getItem('p3dv2')||'{}');
+    if(d.m){document.getElementById('mp').value=d.m;document.getElementById('dm').value=d.m}
+    if(d.h){document.getElementById('hr').value=d.h;document.getElementById('dh').value=d.h}
+    if(d.e){document.getElementById('ep').value=d.e;document.getElementById('de').value=d.e}
+    if(d.g){document.getElementById('mg').value=d.g;document.getElementById('mgLbl').textContent=d.g+'%';document.getElementById('mf').style.width=Math.min(d.g/2,100)+'%';document.getElementById('dg').value=d.g}
+  }catch(e){}
+}
+function calc(){
+  const w=gv('wg'),t=gv('tm'),mp=gv('mp'),hr=gv('hr'),en=gv('en'),ep=gv('ep'),mg=gv('mg'),ex=gv('ex');
+  if(!w&&!t){toast('⚠ Wprowadź wagę lub czas druku');return}
+  const cM=w/1000*mp,cW=t*hr,cE=en*ep,cT=cM+cW+cE+ex,net=cT*(1+mg/100),br=net*1.23,profit=net-cT;
+  document.getElementById('rMat').textContent=fmt(cM);
+  document.getElementById('rWork').textContent=fmt(cW);
+  document.getElementById('rEn').textContent=fmt(cE);
+  document.getElementById('rEx').textContent=fmt(ex);
+  document.getElementById('rNet').textContent=fmt(net);
+  document.getElementById('rCost').textContent=fmt(cT);
+  document.getElementById('rFin').textContent=fmt(net);
+  document.getElementById('rGross').textContent='brutto (VAT 23%): '+fmt(br);
+  document.getElementById('fbox').innerHTML=
+    `<span style="color:var(--v2)">PODSUMOWANIE FORMUŁ</span>\n`+
+    `Materiał   = (${w}g ÷ 1000) × ${mp} zł/kg = ${fmt(cM)}\n`+
+    `Praca      = ${t}h × ${hr} zł/h = ${fmt(cW)}\n`+
+    `Energia    = ${en} kWh × ${ep} zł/kWh = ${fmt(cE)}\n`+
+    `Dodatkowy  = ${fmt(ex)}\n`+
+    `Koszt całk.= ${fmt(cT)}\n`+
+    `Netto      = ${fmt(cT)} × (1 + ${mg}/100) = <b style="color:var(--v2)">${fmt(net)}</b>\n`+
+    `Brutto     = ${fmt(br)}   Zysk: <b style="color:#10b981">${fmt(profit)}</b>`;
+  const r=document.getElementById('res');r.style.display='block';
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+function clearAll(){
+  ['wg','tm','mp','hr','en','ep','ex'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('mg').value=30;document.getElementById('mgLbl').textContent='30%';
+  document.getElementById('mf').style.width='15%';
+  document.getElementById('res').style.display='none';
+  toast('✓ Formularz wyczyszczony');
+}
+function loadEx(){
+  document.getElementById('wg').value=52;document.getElementById('tm').value=4;
+  document.getElementById('mp').value=75;document.getElementById('hr').value=12;
+  document.getElementById('en').value=0.42;document.getElementById('ep').value=0.82;
+  document.getElementById('mg').value=35;document.getElementById('mgLbl').textContent='35%';
+  document.getElementById('mf').style.width='17.5%';
+  document.getElementById('ex').value=5;
+  calc();toast('📋 Załadowano przykład');
+}
+function copyRes(){
+  const w=gv('wg'),t=gv('tm'),mp=gv('mp'),hr=gv('hr'),en=gv('en'),ep=gv('ep'),mg=gv('mg'),ex=gv('ex');
+  const cM=w/1000*mp,cW=t*hr,cE=en*ep,cT=cM+cW+cE+ex,net=cT*(1+mg/100);
+  const txt=`=== WYCENA DRUKU 3D ===\nData: ${new Date().toLocaleDateString('pl-PL')}\nMateriał: ${curMat} | Waga: ${w}g | Czas: ${t}h\n\nKoszt materiału: ${fmt(cM)}\nKoszt pracy:     ${fmt(cW)}\nKoszt energii:   ${fmt(cE)}\nDodatkowy:       ${fmt(ex)}\n\nCena netto:  ${fmt(net)}\nCena brutto: ${fmt(net*1.23)}`;
+  navigator.clipboard.writeText(txt).then(()=>toast('✓ Skopiowano do schowka')).catch(()=>toast('⚠ Błąd kopiowania'));
+}
+let tt;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),2600)}
+window.addEventListener('DOMContentLoaded',loadDef);
+</script>
+</body>
+</html>
