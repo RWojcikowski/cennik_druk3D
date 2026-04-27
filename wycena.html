@@ -224,7 +224,6 @@ footer a{color:var(--acc);text-decoration:none}
       <div class="mc" onclick="selMat(this,'PETG',1.27,90)"><div class="md" style="background:#3b82f6"></div><div class="mn">PETG</div><div class="mpr">~90 zł/kg</div></div>
       <div class="mc" onclick="selMat(this,'ABS',1.04,85)"><div class="md" style="background:#f59e0b"></div><div class="mn">ABS</div><div class="mpr">~85 zł/kg</div></div>
       <div class="mc" onclick="selMat(this,'TPU',1.21,120)"><div class="md" style="background:#ec4899"></div><div class="mn">TPU</div><div class="mpr">~120 zł/kg</div></div>
-      <div class="mc" onclick="selMat(this,'Resin',1.10,180)"><div class="md" style="background:#8b5cf6"></div><div class="mn">Resin</div><div class="mpr">~180 zł/kg</div></div>
     </div>
   </div>
 </div>
@@ -313,7 +312,7 @@ footer a{color:var(--acc);text-decoration:none}
 <script>
 // STATE
 const S={mat:'PLA',density:1.24,price:75,infill:20,urgMult:1.0,urgLabel:'Standardowy (5–7 dni)',volCm3:null};
-const MATS={PLA:{d:1.24,p:75,h:12},PETG:{d:1.27,p:90,h:13},ABS:{d:1.04,p:85,h:13},TPU:{d:1.21,p:120,h:15},Resin:{d:1.10,p:180,h:18}};
+const MATS={PLA:{d:1.24,p:75,h:12},PETG:{d:1.27,p:90,h:13},ABS:{d:1.04,p:85,h:13},TPU:{d:1.21,p:120,h:15},};
 
 function selMat(el,n,d,p){document.querySelectorAll('.mc').forEach(c=>c.classList.remove('on'));el.classList.add('on');S.mat=n;S.density=d;S.price=p;if(S.volCm3){const w=(S.volCm3*d*(0.30+S.infill/100*0.70)).toFixed(1);document.getElementById('wg').value=w;document.getElementById('sWgt').textContent=w+' g'}}
 function selInfill(el,v){document.querySelectorAll('.icp').forEach(c=>c.classList.remove('on'));el.classList.add('on');S.infill=v;if(S.volCm3){const w=(S.volCm3*S.density*(0.30+v/100*0.70)).toFixed(1);document.getElementById('wg').value=w;document.getElementById('sWgt').textContent=w+' g'}}
