@@ -71,6 +71,20 @@ body{background:var(--off);color:var(--ink);font-family:var(--sans);min-height:1
 /* ERROR */
 .err{background:#fff5f5;border:1.5px solid #fcc;border-radius:var(--r);padding:11px 14px;font-size:13px;color:#c00;margin-top:10px;display:none}
 
+/* 3D VIEWER */
+#viewer-wrap{display:none;margin-top:16px;border-radius:var(--r);overflow:hidden;border:1px solid var(--cream);animation:pop .3s ease}
+.viewer-toolbar{background:var(--ink);padding:9px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.viewer-title{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.08em;display:flex;align-items:center;gap:7px}
+.viewer-title span{color:rgba(255,255,255,.25)}
+.viewer-controls{display:flex;gap:6px}
+.vbtn{font-family:var(--mono);font-size:10px;padding:5px 11px;border-radius:5px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:rgba(255,255,255,.55);cursor:pointer;transition:all .18s;letter-spacing:.05em}
+.vbtn:hover{border-color:rgba(232,68,10,.5);color:#fff;background:rgba(232,68,10,.15)}
+.vbtn.on{border-color:rgba(232,68,10,.6);background:rgba(232,68,10,.2);color:#ff7040}
+#viewer-canvas{width:100%;height:340px;display:block;cursor:grab;background:#141210}
+#viewer-canvas:active{cursor:grabbing}
+.viewer-hint{background:var(--ink);padding:7px 14px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.22);text-align:center;letter-spacing:.06em}
+@media(max-width:500px){#viewer-canvas{height:260px}}
+
 /* MAT GRID */
 .mg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 @media(max-width:480px){.mg{grid-template-columns:repeat(3,1fr)}}
@@ -169,6 +183,53 @@ body{background:var(--off);color:var(--ink);font-family:var(--sans);min-height:1
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-family:var(--mono);font-size:13px;padding:10px 20px;border-radius:20px;transition:transform .3s;z-index:999;white-space:nowrap}
 .toast.on{transform:translateX(-50%) translateY(0)}
 
+/* ── 3D VIEWER ── */
+#viewer-wrap{
+  display:none;margin-top:18px;
+  background:#141210;border:1px solid #2a2420;
+  border-radius:var(--r);overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,.25);
+}
+.viewer-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;background:#1a1715;border-bottom:1px solid #2a2420;
+  flex-wrap:wrap;gap:8px;
+}
+.viewer-title{
+  font-family:var(--mono);font-size:12px;color:#9a9088;
+  display:flex;align-items:center;gap:6px;min-width:0;
+}
+.viewer-title span{color:#5a5048}
+.viewer-title span:last-child{
+  color:#c8c0b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px;
+}
+.viewer-controls{display:flex;gap:5px;flex-wrap:wrap}
+.vbtn{
+  font-family:var(--mono);font-size:11px;padding:5px 11px;
+  background:#242018;border:1px solid #3a3428;border-radius:5px;
+  color:#888078;cursor:pointer;transition:all .16s;white-space:nowrap;
+}
+.vbtn:hover{border-color:#e8440a;color:#e8440a;background:#1e1a16}
+.vbtn.on{background:rgba(232,68,10,.15);border-color:#e8440a;color:#e8440a}
+#viewer-canvas{
+  display:block;width:100%;height:340px;cursor:grab;touch-action:none;
+}
+#viewer-canvas:active{cursor:grabbing}
+@media(max-width:480px){#viewer-canvas{height:260px}}
+.viewer-hint{
+  font-family:var(--mono);font-size:10px;color:#4a4540;
+  text-align:center;padding:7px;letter-spacing:.04em;background:#100e0c;
+}
+.viewer-size-info{
+  display:flex;gap:0;border-top:1px solid #2a2420;
+}
+.vsz{
+  flex:1;text-align:center;padding:8px 4px;border-right:1px solid #2a2420;
+}
+.vsz:last-child{border-right:none}
+.vsz-val{font-family:var(--mono);font-size:13px;font-weight:500;color:#c8c0b8}
+.vsz-lbl{font-family:var(--mono);font-size:9px;color:#5a5048;text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+
 footer{text-align:center;padding:28px 0 0;font-family:var(--mono);font-size:11px;color:var(--mid)}
 footer a{color:var(--acc);text-decoration:none}
 </style>
@@ -209,8 +270,29 @@ footer a{color:var(--acc);text-decoration:none}
       <div class="stats">
         <div class="stb"><div class="stv" id="sTri">—</div><div class="stl">Trójkąty</div></div>
         <div class="stb"><div class="stv" id="sVol">—</div><div class="stl">Objętość cm³</div></div>
-        <div class="stb"><div class="stv" id="sWgt">—</div><div class="stl">Waga (g)</div></div>
+        <div class="stb"><div class="stv" id="sWgt">—</div><div class="stl">Waga szac. (g)</div></div>
       </div>
+    </div>
+
+    <!-- 3D VIEWER -->
+    <div id="viewer-wrap">
+      <div class="viewer-toolbar">
+        <div class="viewer-title">🖨️ Podgląd 3D <span>·</span> <span id="vModelName">model.stl</span></div>
+        <div class="viewer-controls">
+          <button class="vbtn" onclick="resetCamera()" title="Resetuj widok">⟳ Reset</button>
+          <button class="vbtn" id="wireBtn" onclick="toggleWire()" title="Tryb siatki">⬡ Siatka</button>
+          <button class="vbtn" id="shadBtn" onclick="toggleShading()" title="Cieniowanie">◑ Cień</button>
+          <button class="vbtn" id="axBtn" onclick="toggleAxes()" title="Osie">⊞ Osie</button>
+        </div>
+      </div>
+      <canvas id="viewer-canvas"></canvas>
+      <div class="viewer-size-info">
+        <div class="vsz"><div class="vsz-val" id="vSzX">—</div><div class="vsz-lbl">szer. (mm)</div></div>
+        <div class="vsz"><div class="vsz-val" id="vSzY">—</div><div class="vsz-lbl">wys. (mm)</div></div>
+        <div class="vsz"><div class="vsz-val" id="vSzZ">—</div><div class="vsz-lbl">głęb. (mm)</div></div>
+        <div class="vsz"><div class="vsz-val" id="vSzVol">—</div><div class="vsz-lbl">obj. (cm³)</div></div>
+      </div>
+      <div class="viewer-hint">🖱 Przeciągnij — obróć &nbsp;|&nbsp; Kółko — zoom &nbsp;|&nbsp; Dotyk — przesuń palcem</div>
     </div>
   </div>
 </div>
@@ -224,6 +306,7 @@ footer a{color:var(--acc);text-decoration:none}
       <div class="mc" onclick="selMat(this,'PETG',1.27,90)"><div class="md" style="background:#3b82f6"></div><div class="mn">PETG</div><div class="mpr">~90 zł/kg</div></div>
       <div class="mc" onclick="selMat(this,'ABS',1.04,85)"><div class="md" style="background:#f59e0b"></div><div class="mn">ABS</div><div class="mpr">~85 zł/kg</div></div>
       <div class="mc" onclick="selMat(this,'TPU',1.21,120)"><div class="md" style="background:#ec4899"></div><div class="mn">TPU</div><div class="mpr">~120 zł/kg</div></div>
+      <div class="mc" onclick="selMat(this,'Resin',1.10,180)"><div class="md" style="background:#8b5cf6"></div><div class="mn">Resin</div><div class="mpr">~180 zł/kg</div></div>
     </div>
   </div>
 </div>
@@ -234,6 +317,10 @@ footer a{color:var(--acc);text-decoration:none}
   <div class="cb">
     <div class="t2">
       <div class="ig"><label>Waga modelu</label><div class="ii"><input type="number" id="wg" placeholder="— obliczona ze STL" min="0" step=".1"><span class="iu">g</span></div></div>
+      <div class="ig">
+        <label>Waga wg PrusaSlicer / Cura <span style="color:var(--acc);font-size:11px">← dokładniejsze</span></label>
+        <div class="ii"><input type="number" id="wgSlicer" placeholder="wpisz ręcznie" min="0" step=".1" oninput="if(this.value)document.getElementById('wg').value=this.value"><span class="iu">g</span></div>
+      </div>
       <div class="ig"><label>Szacowany czas druku</label><div class="ii"><input type="number" id="tm" placeholder="np. 4.5 h" min="0" step=".5"><span class="iu">h</span></div></div>
     </div>
     <div class="sep"></div>
@@ -309,21 +396,33 @@ footer a{color:var(--acc);text-decoration:none}
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // STATE
 const S={mat:'PLA',density:1.24,price:75,infill:20,urgMult:1.0,urgLabel:'Standardowy (5–7 dni)',volCm3:null};
-const MATS={PLA:{d:1.24,p:75,h:12},PETG:{d:1.27,p:90,h:13},ABS:{d:1.04,p:85,h:13},TPU:{d:1.21,p:120,h:15},};
+const MATS={PLA:{d:1.24,p:75,h:12},PETG:{d:1.27,p:90,h:13},ABS:{d:1.04,p:85,h:13},TPU:{d:1.21,p:120,h:15},Resin:{d:1.10,p:180,h:18}};
 
-function selMat(el,n,d,p){document.querySelectorAll('.mc').forEach(c=>c.classList.remove('on'));el.classList.add('on');S.mat=n;S.density=d;S.price=p;if(S.volCm3){const w=(S.volCm3*d*(0.30+S.infill/100*0.70)).toFixed(1);document.getElementById('wg').value=w;document.getElementById('sWgt').textContent=w+' g'}}
-function selInfill(el,v){document.querySelectorAll('.icp').forEach(c=>c.classList.remove('on'));el.classList.add('on');S.infill=v;if(S.volCm3){const w=(S.volCm3*S.density*(0.30+v/100*0.70)).toFixed(1);document.getElementById('wg').value=w;document.getElementById('sWgt').textContent=w+' g'}}
+// ─── WEIGHT FORMULA (fixed) ────────────────────────────────────────────────
+// Realistic: shell ~8% of volume + infill of remaining 92%
+function infillFactor(pct){ return 0.08 + (pct/100) * 0.78; }
+
+function selMat(el,n,d,p){
+  document.querySelectorAll('.mc').forEach(c=>c.classList.remove('on'));el.classList.add('on');
+  S.mat=n;S.density=d;S.price=p;
+  if(S.volCm3){const w=(S.volCm3*d*infillFactor(S.infill)).toFixed(1);document.getElementById('wg').value=w;document.getElementById('sWgt').textContent=w+' g'}
+}
+function selInfill(el,v){
+  document.querySelectorAll('.icp').forEach(c=>c.classList.remove('on'));el.classList.add('on');S.infill=v;
+  if(S.volCm3){const w=(S.volCm3*S.density*infillFactor(v)).toFixed(1);document.getElementById('wg').value=w;document.getElementById('sWgt').textContent=w+' g'}
+}
 function selUrg(el,m,n,d){document.querySelectorAll('.uc').forEach(c=>c.classList.remove('on'));el.classList.add('on');S.urgMult=m;S.urgLabel=n+' ('+d+')'}
 
-// DRAG DROP
+// ─── DRAG DROP ─────────────────────────────────────────────────────────────
 function onDO(e){e.preventDefault();document.getElementById('dz').classList.add('over')}
 function onDL(e){document.getElementById('dz').classList.remove('over')}
 function onDrop(e){e.preventDefault();document.getElementById('dz').classList.remove('over');const f=e.dataTransfer.files[0];if(f)handleFile(f)}
 
-// FILE HANDLING
+// ─── FILE HANDLING ─────────────────────────────────────────────────────────
 function handleFile(file){
   if(!file)return;
   if(!file.name.toLowerCase().endsWith('.stl')){showErr('Proszę wybrać plik .STL');return}
@@ -331,23 +430,51 @@ function handleFile(file){
   hideErr();showProg('Wczytywanie pliku…',15);
   document.getElementById('fname').textContent=file.name;
   document.getElementById('fsize').textContent=(file.size/1024/1024).toFixed(2)+' MB';
+  document.getElementById('vModelName').textContent=file.name;
   const r=new FileReader();
-  r.onload=e=>{showProg('Parsowanie geometrii STL…',45);setTimeout(()=>{
-    try{const res=parseSTL(e.target.result);showProg('Obliczanie objętości…',80);setTimeout(()=>{finishParse(res);showProg('Gotowe!',100);setTimeout(hideProg,600)},120)}
-    catch(err){hideProg();showErr('Błąd parsowania: '+err.message)}
-  },80)};
+  r.onload=e=>{
+    showProg('Parsowanie geometrii STL…',40);
+    setTimeout(()=>{
+      try{
+        const res=parseSTL(e.target.result);
+        showProg('Obliczanie objętości…',70);
+        setTimeout(()=>{
+          finishParse(res);
+          showProg('Renderowanie podglądu 3D…',90);
+          setTimeout(()=>{
+            buildViewer(res.positions);
+            showProg('Gotowe!',100);
+            setTimeout(hideProg,500);
+          },80);
+        },100);
+      }catch(err){hideProg();showErr('Błąd parsowania: '+err.message)}
+    },80);
+  };
   r.readAsArrayBuffer(file);
 }
 
-// STL PARSER
+// ─── STL PARSER ────────────────────────────────────────────────────────────
 function parseSTL(buf){
   const a=new Uint8Array(buf);
   const bin=isBinary(a,buf);
-  const tris=bin?parseBin(buf):parseAsc(new TextDecoder().decode(buf));
+  const {tris,positions}=bin?parseBin(buf):parseAsc(new TextDecoder().decode(buf));
   if(!tris.length)throw new Error('Nie znaleziono trójkątów');
   let vol=0;
-  for(const t of tris)vol+=signedVol(t[0],t[1],t[2]);
-  return{triangles:tris.length,volumeCm3:Math.abs(vol)/1000};
+  let minX=Infinity,minY=Infinity,minZ=Infinity,maxX=-Infinity,maxY=-Infinity,maxZ=-Infinity;
+  for(const t of tris){
+    vol+=signedVol(t[0],t[1],t[2]);
+    for(const v of t){
+      if(v[0]<minX)minX=v[0];if(v[0]>maxX)maxX=v[0];
+      if(v[1]<minY)minY=v[1];if(v[1]>maxY)maxY=v[1];
+      if(v[2]<minZ)minZ=v[2];if(v[2]>maxZ)maxZ=v[2];
+    }
+  }
+  return{
+    triangles:tris.length,
+    volumeCm3:Math.abs(vol)/1000,
+    positions,
+    size:{x:maxX-minX,y:maxY-minY,z:maxZ-minZ}
+  };
 }
 
 function isBinary(a,buf){
@@ -359,30 +486,232 @@ function isBinary(a,buf){
 }
 
 function parseBin(buf){
-  const v=new DataView(buf);const n=v.getUint32(80,true);const t=[];let o=84;
-  for(let i=0;i<n;i++){o+=12;const a=[v.getFloat32(o,true),v.getFloat32(o+4,true),v.getFloat32(o+8,true)];o+=12;const b=[v.getFloat32(o,true),v.getFloat32(o+4,true),v.getFloat32(o+8,true)];o+=12;const c=[v.getFloat32(o,true),v.getFloat32(o+4,true),v.getFloat32(o+8,true)];o+=14;t.push([a,b,c])}
-  return t;
+  const v=new DataView(buf);const n=v.getUint32(80,true);
+  const tris=[];
+  // For large models, sample positions (max 300k triangles for viewer)
+  const maxView=300000;const step=Math.max(1,Math.floor(n/maxView));
+  const positions=new Float32Array(Math.min(n,maxView)*9);
+  let pi=0,o=84;
+  for(let i=0;i<n;i++){
+    o+=12;
+    const ax=v.getFloat32(o,true),ay=v.getFloat32(o+4,true),az=v.getFloat32(o+8,true);o+=12;
+    const bx=v.getFloat32(o,true),by=v.getFloat32(o+4,true),bz=v.getFloat32(o+8,true);o+=12;
+    const cx=v.getFloat32(o,true),cy=v.getFloat32(o+4,true),cz=v.getFloat32(o+8,true);o+=14;
+    tris.push([[ax,ay,az],[bx,by,bz],[cx,cy,cz]]);
+    if(i%step===0&&pi<positions.length-8){
+      positions[pi++]=ax;positions[pi++]=ay;positions[pi++]=az;
+      positions[pi++]=bx;positions[pi++]=by;positions[pi++]=bz;
+      positions[pi++]=cx;positions[pi++]=cy;positions[pi++]=cz;
+    }
+  }
+  return{tris,positions:positions.slice(0,pi)};
 }
 
 function parseAsc(txt){
-  const t=[];const re=/vertex\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)/g;
-  let m,vs=[];
-  while((m=re.exec(txt))!==null){vs.push([parseFloat(m[1]),parseFloat(m[2]),parseFloat(m[3])]);if(vs.length===3){t.push([vs[0],vs[1],vs[2]]);vs=[]}}
-  return t;
+  const tris=[];const re=/vertex\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)/g;
+  let m,vs=[];const posArr=[];
+  while((m=re.exec(txt))!==null){
+    const p=[parseFloat(m[1]),parseFloat(m[2]),parseFloat(m[3])];
+    vs.push(p);posArr.push(...p);
+    if(vs.length===3){tris.push([vs[0],vs[1],vs[2]]);vs=[]}
+  }
+  return{tris,positions:new Float32Array(posArr)};
 }
 
 function signedVol(p1,p2,p3){return(p1[0]*(p2[1]*p3[2]-p2[2]*p3[1])+p2[0]*(p3[1]*p1[2]-p3[2]*p1[1])+p3[0]*(p1[1]*p2[2]-p1[2]*p2[1]))/6}
 
 function finishParse(res){
   S.volCm3=res.volumeCm3;
-  const f=0.30+S.infill/100*0.70;
-  const w=(res.volumeCm3*S.density*f).toFixed(1);
+  const w=(res.volumeCm3*S.density*infillFactor(S.infill)).toFixed(1);
   document.getElementById('sTri').textContent=res.triangles.toLocaleString('pl-PL');
   document.getElementById('sVol').textContent=res.volumeCm3.toFixed(2);
-  document.getElementById('sWgt').textContent=w+' g';
+  document.getElementById('sWgt').textContent=w+' g (szac.)';
   document.getElementById('wg').value=w;
+  // Size info bar
+  if(res.size){
+    document.getElementById('vSzX').textContent=res.size.x.toFixed(1);
+    document.getElementById('vSzY').textContent=res.size.y.toFixed(1);
+    document.getElementById('vSzZ').textContent=res.size.z.toFixed(1);
+  }
+  document.getElementById('vSzVol').textContent=res.volumeCm3.toFixed(2);
   document.getElementById('fi').style.display='block';
-  toast('✓ Plik przeanalizowany — waga obliczona automatycznie');
+  toast('✓ Plik przeanalizowany — podaj wagę ze slicera dla dokładnej wyceny');
+}
+
+// ─── THREE.JS VIEWER ───────────────────────────────────────────────────────
+let renderer,scene,camera,mesh,wireframe,axesHelper,animId;
+let isWire=false,isFlat=false,showAxes=false;
+
+function buildViewer(positions){
+  const wrap=document.getElementById('viewer-wrap');
+  wrap.style.display='block';
+  const canvas=document.getElementById('viewer-canvas');
+
+  // Cleanup previous
+  if(renderer){renderer.dispose();cancelAnimationFrame(animId)}
+
+  const W=canvas.clientWidth,H=canvas.clientHeight||340;
+  canvas.width=W*devicePixelRatio;canvas.height=H*devicePixelRatio;
+
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+  renderer.setPixelRatio(devicePixelRatio);
+  renderer.setSize(W,H,false);
+  renderer.shadowMap.enabled=true;
+  renderer.setClearColor(0x141210,1);
+
+  scene=new THREE.Scene();
+  scene.fog=new THREE.Fog(0x141210,80,200);
+
+  // Camera
+  camera=new THREE.PerspectiveCamera(45,W/H,0.01,1000);
+  camera.position.set(0,0,3);
+
+  // Lights
+  scene.add(new THREE.AmbientLight(0xffffff,0.55));
+  const d1=new THREE.DirectionalLight(0xffffff,0.9);d1.position.set(1,2,2);scene.add(d1);
+  const d2=new THREE.DirectionalLight(0xe8440a,0.35);d2.position.set(-2,-1,-1);scene.add(d2);
+  const d3=new THREE.DirectionalLight(0x8866ff,0.25);d3.position.set(0,3,-2);scene.add(d3);
+
+  // Grid floor
+  const grid=new THREE.GridHelper(10,20,0x2a2420,0x1e1c18);
+  grid.position.y=-1.1;scene.add(grid);
+
+  // Axes
+  axesHelper=new THREE.AxesHelper(1.5);axesHelper.visible=false;scene.add(axesHelper);
+
+  // Geometry
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
+  geo.computeVertexNormals();
+  geo.center();
+
+  // Scale to fit view
+  geo.computeBoundingBox();
+  const bb=geo.boundingBox;
+  const size=new THREE.Vector3();bb.getSize(size);
+  const maxDim=Math.max(size.x,size.y,size.z);
+  const scale=1.8/maxDim;
+  geo.scale(scale,scale,scale);
+  geo.computeBoundingBox();
+  const bb2=geo.boundingBox;
+  geo.translate(0,-(bb2.min.y),0);
+  geo.translate(0,-((bb2.max.y-bb2.min.y)/2),0);
+
+  // Materials
+  const matSolid=new THREE.MeshPhongMaterial({color:0xd0c8c0,specular:0x444444,shininess:40,side:THREE.DoubleSide});
+  const matWire=new THREE.MeshBasicMaterial({color:0xe8440a,wireframe:true,transparent:true,opacity:0.7});
+  const matFlat=new THREE.MeshLambertMaterial({color:0xd0c8c0,side:THREE.DoubleSide,flatShading:true});
+
+  mesh=new THREE.Mesh(geo,matSolid);
+  wireframe=new THREE.Mesh(geo,matWire);wireframe.visible=false;
+  scene.add(mesh);scene.add(wireframe);
+
+  // Position camera
+  camera.position.set(0,0.5,3.5);
+  camera.lookAt(0,0,0);
+
+  // Store materials on mesh for toggling
+  mesh.userData={solid:matSolid,wire:matWire,flat:matFlat};
+
+  // Orbit controls (manual)
+  setupOrbit(canvas);
+
+  // Animate
+  let autoRot=true;
+  canvas.addEventListener('mousedown',()=>{autoRot=false});
+  canvas.addEventListener('touchstart',()=>{autoRot=false},{passive:true});
+
+  function animate(){
+    animId=requestAnimationFrame(animate);
+    if(autoRot)scene.rotation.y+=0.004;
+    renderer.render(scene,camera);
+  }
+  animate();
+
+  // Resize observer
+  const ro=new ResizeObserver(()=>{
+    const w=canvas.clientWidth,h=canvas.clientHeight||340;
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h;camera.updateProjectionMatrix();
+  });
+  ro.observe(canvas);
+
+  wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
+  toast('✓ Podgląd 3D załadowany — przeciągnij aby obrócić');
+}
+
+// ─── ORBIT (manual mouse + touch) ─────────────────────────────────────────
+function setupOrbit(canvas){
+  let dragging=false,lastX=0,lastY=0,dist=3.5;
+
+  canvas.addEventListener('mousedown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY});
+  window.addEventListener('mouseup',()=>dragging=false);
+  window.addEventListener('mousemove',e=>{
+    if(!dragging)return;
+    const dx=(e.clientX-lastX)*0.006;
+    const dy=(e.clientY-lastY)*0.006;
+    lastX=e.clientX;lastY=e.clientY;
+    const qH=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),dx);
+    const qV=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),dy);
+    scene.quaternion.premultiply(qH).premultiply(qV);
+  });
+
+  canvas.addEventListener('wheel',e=>{
+    e.preventDefault();
+    dist=Math.max(0.5,Math.min(20,dist+e.deltaY*0.005));
+    camera.position.setLength(dist);
+  },{passive:false});
+
+  // Touch
+  let touches=[];
+  canvas.addEventListener('touchstart',e=>{touches=[...e.touches];},{passive:true});
+  canvas.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    if(e.touches.length===1&&touches.length===1){
+      const dx=(e.touches[0].clientX-touches[0].clientX)*0.006;
+      const dy=(e.touches[0].clientY-touches[0].clientY)*0.006;
+      const qH=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),dx);
+      const qV=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),dy);
+      scene.quaternion.premultiply(qH).premultiply(qV);
+    } else if(e.touches.length===2&&touches.length===2){
+      const d0=Math.hypot(touches[0].clientX-touches[1].clientX,touches[0].clientY-touches[1].clientY);
+      const d1=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+      dist=Math.max(0.5,Math.min(20,dist-(d1-d0)*0.01));
+      camera.position.setLength(dist);
+    }
+    touches=[...e.touches];
+  },{passive:false});
+}
+
+// ─── VIEWER CONTROLS ───────────────────────────────────────────────────────
+function resetCamera(){
+  if(!scene)return;
+  scene.quaternion.set(0,0,0,1);
+  camera.position.set(0,0.5,3.5);
+  camera.lookAt(0,0,0);
+  toast('↩ Widok zresetowany');
+}
+
+function toggleWire(){
+  if(!mesh)return;
+  isWire=!isWire;
+  mesh.material=isWire?mesh.userData.wire:mesh.userData.solid;
+  wireframe.visible=false;
+  document.getElementById('wireBtn').classList.toggle('on',isWire);
+}
+
+function toggleShading(){
+  if(!mesh)return;
+  isFlat=!isFlat;
+  if(!isWire)mesh.material=isFlat?mesh.userData.flat:mesh.userData.solid;
+  document.getElementById('shadBtn').classList.toggle('on',isFlat);
+}
+
+function toggleAxes(){
+  if(!axesHelper)return;
+  showAxes=!showAxes;
+  axesHelper.visible=showAxes;
+  document.getElementById('axBtn').classList.toggle('on',showAxes);
 }
 
 function showProg(l,p){document.getElementById('prog').style.display='block';document.getElementById('pf').style.width=p+'%';document.getElementById('pl').textContent=l}
@@ -390,7 +719,7 @@ function hideProg(){document.getElementById('prog').style.display='none'}
 function showErr(m){const e=document.getElementById('err');e.textContent='⚠ '+m;e.style.display='block'}
 function hideErr(){document.getElementById('err').style.display='none'}
 
-// CALC
+// ─── CALC ──────────────────────────────────────────────────────────────────
 function fmt(n){return n.toFixed(2).replace('.',',')+' zł'}
 function calc(){
   const w=parseFloat(document.getElementById('wg').value)||0;
