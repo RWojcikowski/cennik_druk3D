@@ -3,235 +3,195 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wycena Druku 3D — Wgraj plik STL</title>
+<title>0880 PRINT LAB — Wycena Druku 3D</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --w:#ffffff;--off:#f8f7f4;--cream:#eeece6;--sand:#d8d4c8;
-  --mid:#918e84;--dark:#2e2c28;--ink:#18160f;
-  --acc:#e8440a;--aL:rgba(232,68,10,.10);--aM:rgba(232,68,10,.22);
-  --green:#1a7a4a;--gL:rgba(26,122,74,.10);
+  --bg0:#080808;--bg1:#0f0e10;--bg2:#282829;--bg3:#1a1a1b;
+  --border:#3a1850;--border2:#5a2880;
+  --acc:#420c6b;--acc2:#6b1fa8;--acc3:#a060d8;
+  --aL:rgba(66,12,107,.18);--aL2:rgba(66,12,107,.08);
+  --text:#f0ecff;--text2:#a090be;--text3:#604878;
   --sans:'DM Sans',sans-serif;--mono:'DM Mono',monospace;--display:'Syne',sans-serif;
-  --r:12px;--r2:20px;--sh:0 2px 14px rgba(24,22,15,.07);--shL:0 8px 40px rgba(24,22,15,.12);
+  --r:12px;--r2:20px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--off);color:var(--ink);font-family:var(--sans);min-height:100vh;padding-bottom:80px}
+body{background:var(--bg0);color:var(--text);font-family:var(--sans);min-height:100vh;padding-bottom:80px}
 
 /* HERO */
-.hero{background:var(--ink);color:#fff;padding:48px 20px 56px;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 95% 50%,rgba(232,68,10,.2) 0%,transparent 60%),repeating-linear-gradient(45deg,transparent,transparent 28px,rgba(255,255,255,.012) 28px,rgba(255,255,255,.012) 29px)}
+.hero{background:var(--bg0);color:var(--text);padding:48px 20px 56px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:
+  radial-gradient(ellipse 55% 70% at 90% 50%,rgba(66,12,107,.4) 0%,transparent 60%),
+  radial-gradient(ellipse 60% 50% at 10% 80%,rgba(107,31,168,.15) 0%,transparent 55%),
+  repeating-linear-gradient(45deg,transparent,transparent 28px,rgba(255,255,255,.01) 28px,rgba(255,255,255,.01) 29px)}
 .hi{position:relative;max-width:720px;margin:0 auto}
-.back{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.35);text-decoration:none;margin-bottom:22px;transition:color .18s;letter-spacing:.04em}
-.back:hover{color:rgba(255,255,255,.7)}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:10px}
-.hero h1{font-family:var(--display);font-size:clamp(28px,6vw,52px);font-weight:800;line-height:1.05;margin-bottom:14px}
-.hero-sub{font-size:15px;color:rgba(255,255,255,.5);line-height:1.65;max-width:480px;font-weight:300}
+.back{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--text3);text-decoration:none;margin-bottom:22px;transition:color .18s;letter-spacing:.04em}
+.back:hover{color:var(--text2)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc3);margin-bottom:10px}
+.hero h1{font-family:var(--display);font-size:clamp(28px,6vw,52px);font-weight:800;line-height:1.05;margin-bottom:14px;color:var(--text)}
+.hero-sub{font-size:15px;color:var(--text2);line-height:1.65;max-width:480px;font-weight:300}
 .steps{display:flex;gap:18px;margin-top:26px;flex-wrap:wrap}
-.step{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,.45)}
-.sn{width:22px;height:22px;border-radius:50%;background:var(--acc);color:#fff;font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text2)}
+.sn{width:22px;height:22px;border-radius:50%;background:var(--acc2);color:#fff;font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
-/* MAIN */
 .main{max-width:720px;margin:0 auto;padding:0 16px}
 
 /* CARD */
-.card{background:var(--w);border-radius:var(--r2);box-shadow:var(--sh);margin-top:20px;overflow:hidden}
-.ch{padding:18px 22px 14px;border-bottom:1px solid var(--cream);display:flex;align-items:center;gap:12px}
-.ci{width:36px;height:36px;border-radius:10px;background:var(--aL);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.ct{font-family:var(--display);font-size:15px;font-weight:700}
-.cd{font-size:13px;color:var(--mid);margin-top:2px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);margin-top:20px;overflow:hidden}
+.ch{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.ci{width:36px;height:36px;border-radius:10px;background:var(--aL);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ct{font-family:var(--display);font-size:15px;font-weight:700;color:var(--text)}
+.cd{font-size:13px;color:var(--text2);margin-top:2px}
 .cb{padding:22px}
 
 /* DROPZONE */
-.dz{border:2px dashed var(--sand);border-radius:var(--r);padding:38px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--off);position:relative}
-.dz:hover,.dz.over{border-color:var(--acc);background:var(--aL)}
+.dz{border:2px dashed var(--border2);border-radius:var(--r);padding:38px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg0);position:relative}
+.dz:hover,.dz.over{border-color:var(--acc3);background:var(--aL)}
 .dz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .dz-icon{font-size:34px;margin-bottom:10px;display:block}
-.dz-title{font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:5px}
-.dz-sub{font-size:13px;color:var(--mid)}
+.dz-title{font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:5px;color:var(--text)}
+.dz-sub{font-size:13px;color:var(--text2)}
 .fmts{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-.ftag{font-family:var(--mono);font-size:10px;background:var(--cream);color:var(--dark);border-radius:4px;padding:2px 8px}
+.ftag{font-family:var(--mono);font-size:10px;background:var(--aL);color:var(--acc3);border:1px solid var(--border);border-radius:4px;padding:2px 8px}
 
 /* PROGRESS */
 #prog{display:none;margin-top:14px}
-.pb{height:4px;background:var(--cream);border-radius:2px;overflow:hidden}
-.pf{height:100%;background:linear-gradient(90deg,var(--acc),#ff6b3d);border-radius:2px;width:0%;transition:width .3s ease}
-.pl{font-family:var(--mono);font-size:11px;color:var(--mid);margin-top:5px;text-align:center}
+.pb{height:4px;background:var(--bg0);border-radius:2px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc3));border-radius:2px;width:0%;transition:width .3s ease}
+.pl{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:5px;text-align:center}
 
 /* FILE INFO */
-#fi{display:none;margin-top:14px;background:var(--off);border:1px solid var(--cream);border-radius:var(--r);padding:14px 16px;animation:pop .25s ease}
+#fi{display:none;margin-top:14px;background:var(--bg0);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;animation:pop .25s ease}
 @keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
 .fir{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.fn{font-weight:500;font-size:14px}.fs{font-family:var(--mono);font-size:11px;color:var(--mid)}
+.fn{font-weight:500;font-size:14px;color:var(--text)}
+.fs{font-family:var(--mono);font-size:11px;color:var(--text3)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 @media(max-width:420px){.stats{grid-template-columns:1fr 1fr}}
-.stb{background:var(--w);border:1px solid var(--cream);border-radius:8px;padding:10px;text-align:center}
-.stv{font-family:var(--mono);font-size:15px;font-weight:500}
-.stl{font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+.stb{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.stv{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text)}
+.stl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
 
 /* ERROR */
-.err{background:#fff5f5;border:1.5px solid #fcc;border-radius:var(--r);padding:11px 14px;font-size:13px;color:#c00;margin-top:10px;display:none}
+.err{background:rgba(200,0,0,.08);border:1.5px solid rgba(200,0,0,.3);border-radius:var(--r);padding:11px 14px;font-size:13px;color:#ff8080;margin-top:10px;display:none}
 
 /* 3D VIEWER */
-#viewer-wrap{display:none;margin-top:16px;border-radius:var(--r);overflow:hidden;border:1px solid var(--cream);animation:pop .3s ease}
-.viewer-toolbar{background:var(--ink);padding:9px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.viewer-title{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.08em;display:flex;align-items:center;gap:7px}
-.viewer-title span{color:rgba(255,255,255,.25)}
-.viewer-controls{display:flex;gap:6px}
-.vbtn{font-family:var(--mono);font-size:10px;padding:5px 11px;border-radius:5px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:rgba(255,255,255,.55);cursor:pointer;transition:all .18s;letter-spacing:.05em}
-.vbtn:hover{border-color:rgba(232,68,10,.5);color:#fff;background:rgba(232,68,10,.15)}
-.vbtn.on{border-color:rgba(232,68,10,.6);background:rgba(232,68,10,.2);color:#ff7040}
-#viewer-canvas{width:100%;height:340px;display:block;cursor:grab;background:#141210}
+#viewer-wrap{display:none;margin-top:18px;background:#080808;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.4);animation:pop .3s ease}
+.viewer-toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#0d0b10;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.viewer-title{font-family:var(--mono);font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px;min-width:0}
+.viewer-title span:first-of-type{color:var(--text3)}
+.viewer-title span:last-of-type{color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.viewer-controls{display:flex;gap:5px;flex-wrap:wrap}
+.vbtn{font-family:var(--mono);font-size:11px;padding:5px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text2);cursor:pointer;transition:all .16s;white-space:nowrap}
+.vbtn:hover{border-color:var(--acc2);color:var(--acc3)}
+.vbtn.on{background:var(--aL);border-color:var(--acc2);color:var(--acc3)}
+#viewer-canvas{display:block;width:100%;height:340px;cursor:grab;touch-action:none}
 #viewer-canvas:active{cursor:grabbing}
-.viewer-hint{background:var(--ink);padding:7px 14px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.22);text-align:center;letter-spacing:.06em}
-@media(max-width:500px){#viewer-canvas{height:260px}}
+@media(max-width:480px){#viewer-canvas{height:260px}}
+.viewer-size-info{display:flex;border-top:1px solid var(--border)}
+.vsz{flex:1;text-align:center;padding:8px 4px;border-right:1px solid var(--border)}
+.vsz:last-child{border-right:none}
+.vsz-val{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text)}
+.vsz-lbl{font-family:var(--mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.viewer-hint{font-family:var(--mono);font-size:10px;color:var(--text3);text-align:center;padding:7px;letter-spacing:.04em;background:#0a080c}
 
 /* MAT GRID */
-.mg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-@media(max-width:480px){.mg{grid-template-columns:repeat(3,1fr)}}
-.mc{border:1.5px solid var(--cream);border-radius:var(--r);padding:12px 6px;text-align:center;cursor:pointer;transition:all .18s;background:var(--w)}
-.mc:hover{border-color:var(--sand);background:var(--off)}
-.mc.on{border-color:var(--acc);background:var(--aL)}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:460px){.mg{grid-template-columns:repeat(2,1fr)}}
+.mc{border:1.5px solid var(--border);border-radius:var(--r);padding:12px 6px;text-align:center;cursor:pointer;transition:all .18s;background:var(--bg0)}
+.mc:hover{border-color:var(--border2)}
+.mc.on{border-color:var(--acc2);background:var(--aL)}
 .md{width:8px;height:8px;border-radius:50%;margin:0 auto 6px}
-.mn{font-family:var(--mono);font-size:12px;font-weight:500}
-.mpr{font-size:11px;color:var(--mid);margin-top:2px}
+.mn{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text)}
+.mpr{font-size:11px;color:var(--text3);margin-top:2px}
 
 /* INPUTS */
 .ig{margin-bottom:14px}
-.ig label{display:block;font-size:13px;font-weight:500;color:var(--dark);margin-bottom:6px}
+.ig label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:6px}
 .ii{display:flex}
-.ii input{flex:1;border:1.5px solid var(--cream);border-right:none;border-radius:var(--r) 0 0 var(--r);padding:11px 14px;font-family:var(--mono);font-size:16px;font-weight:500;color:var(--ink);background:var(--w);outline:none;transition:border-color .18s;min-width:0}
-.ii input:focus{border-color:var(--acc)}
-.ii input::placeholder{color:var(--sand);font-weight:400}
-.iu{background:var(--cream);border:1.5px solid var(--cream);border-radius:0 var(--r) var(--r) 0;padding:11px 12px;font-family:var(--mono);font-size:12px;color:var(--mid);display:flex;align-items:center;flex-shrink:0;white-space:nowrap}
-.t2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:440px){.t2{grid-template-columns:1fr}}
-.sep{height:1px;background:var(--cream);margin:18px 0}
-.sl{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);margin-bottom:10px}
+.ii input{flex:1;border:1.5px solid var(--border);border-right:none;border-radius:var(--r) 0 0 var(--r);padding:11px 14px;font-family:var(--mono);font-size:16px;font-weight:500;color:var(--text);background:var(--bg0);outline:none;transition:border-color .18s;min-width:0}
+.ii input:focus{border-color:var(--acc2)}
+.ii input::placeholder{color:var(--text3);font-weight:400}
+.iu{background:var(--bg2);border:1.5px solid var(--border);border-radius:0 var(--r) var(--r) 0;padding:11px 12px;font-family:var(--mono);font-size:12px;color:var(--text2);display:flex;align-items:center;flex-shrink:0;white-space:nowrap}
+.t3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:540px){.t3{grid-template-columns:1fr 1fr}}
+@media(max-width:380px){.t3{grid-template-columns:1fr}}
+.sep{height:1px;background:var(--border);margin:18px 0}
+.sl{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
 
-/* INFILL CHIPS */
+/* INFILL */
 .ic{display:flex;gap:6px;flex-wrap:wrap}
-.icp{font-family:var(--mono);font-size:12px;padding:6px 13px;border:1.5px solid var(--cream);border-radius:20px;cursor:pointer;transition:all .15s;background:var(--w);color:var(--dark)}
-.icp:hover{border-color:var(--sand)}
-.icp.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.icp{font-family:var(--mono);font-size:12px;padding:6px 13px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;transition:all .15s;background:var(--bg0);color:var(--text2)}
+.icp:hover{border-color:var(--border2);color:var(--text)}
+.icp.on{background:var(--acc);border-color:var(--acc2);color:#fff}
 
 /* URGENCY */
 .uo{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 @media(max-width:380px){.uo{grid-template-columns:1fr}}
-.uc{border:1.5px solid var(--cream);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .18s;text-align:center}
-.uc:hover{border-color:var(--sand)}
-.uc.on{border-color:var(--acc);background:var(--aL)}
+.uc{border:1.5px solid var(--border);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .18s;text-align:center;background:var(--bg0)}
+.uc:hover{border-color:var(--border2)}
+.uc.on{border-color:var(--acc2);background:var(--aL)}
 .ui{font-size:20px;margin-bottom:3px}
-.un{font-size:13px;font-weight:500}
-.ud{font-family:var(--mono);font-size:10px;color:var(--mid);margin-top:2px}
-.um{font-family:var(--mono);font-size:10px;color:var(--acc);margin-top:3px}
+.un{font-size:13px;font-weight:500;color:var(--text)}
+.ud{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:2px}
+.um{font-family:var(--mono);font-size:10px;color:var(--acc3);margin-top:3px}
 
 /* CALC BTN */
-.cbtn{width:100%;background:var(--acc);color:#fff;border:none;border-radius:var(--r);padding:16px;font-family:var(--display);font-size:17px;font-weight:800;letter-spacing:.04em;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(232,68,10,.3);display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px}
-.cbtn:hover{background:#d43a06;box-shadow:0 6px 28px rgba(232,68,10,.4);transform:translateY(-1px)}
+.cbtn{width:100%;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border:none;border-radius:var(--r);padding:16px;font-family:var(--display);font-size:17px;font-weight:800;letter-spacing:.04em;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(66,12,107,.5);display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px}
+.cbtn:hover{box-shadow:0 6px 28px rgba(66,12,107,.65);transform:translateY(-1px)}
 .cbtn:active{transform:translateY(0)}
 
 /* RESULTS */
 #res{display:none;animation:slideUp .4s ease forwards}
 @keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-.ph{background:var(--ink);border-radius:var(--r2);padding:30px 22px;text-align:center;position:relative;overflow:hidden;margin-top:20px}
-.ph::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 110%,rgba(232,68,10,.22) 0%,transparent 70%)}
+.ph{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:30px 22px;text-align:center;position:relative;overflow:hidden;margin-top:20px}
+.ph::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 110%,rgba(66,12,107,.35) 0%,transparent 70%)}
 .phi{position:relative}
-.pe{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px}
-.pm{font-family:var(--display);font-size:clamp(42px,10vw,68px);font-weight:800;color:#fff;line-height:1;margin-bottom:5px}
-.pr{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.35);margin-bottom:14px}
+.pe{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.pm{font-family:var(--display);font-size:clamp(42px,10vw,68px);font-weight:800;color:var(--text);line-height:1;margin-bottom:5px}
+.pr{font-family:var(--mono);font-size:12px;color:var(--text3);margin-bottom:14px}
 .pbs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.pb2{font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.55)}
-.pb2.hot{background:var(--acc);color:#fff}
+.pb2{font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:20px;background:rgba(66,12,107,.2);color:var(--text2);border:1px solid var(--border)}
+.pb2.hot{background:var(--acc);border-color:var(--acc2);color:#fff}
 
-/* BREAKDOWN */
-.bdown{background:var(--w);border-radius:var(--r2);overflow:hidden;box-shadow:var(--sh);margin-top:14px}
-.brow{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--off);gap:12px}
+.bdown{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-top:14px}
+.brow{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border);gap:12px}
 .brow:last-child{border-bottom:none}
-.brl{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--dark)}
+.brl{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--text2)}
 .bri{font-size:15px;width:24px;text-align:center}
-.brv{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--ink)}
-.brow.tot{background:var(--off);border-top:2px solid var(--cream)}
-.brow.tot .brl{font-weight:700;font-size:15px}
-.brow.tot .brv{color:var(--acc);font-size:15px}
+.brv{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text)}
+.brow.tot{background:var(--aL2);border-top:2px solid var(--border2)}
+.brow.tot .brl{font-weight:700;font-size:15px;color:var(--text)}
+.brow.tot .brv{color:var(--acc3);font-size:15px}
 
-/* SPECS */
-.specs{background:var(--w);border-radius:var(--r2);padding:18px 20px;box-shadow:var(--sh);margin-top:12px}
-.sptitle{font-family:var(--display);font-size:14px;font-weight:700;margin-bottom:12px}
+.specs{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px 20px;margin-top:12px}
+.sptitle{font-family:var(--display);font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)}
 .spg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 @media(max-width:380px){.spg{grid-template-columns:1fr}}
-.spi{background:var(--off);border-radius:8px;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.spk{font-size:12px;color:var(--mid)}
-.spv{font-family:var(--mono);font-size:12px;font-weight:500}
+.spi{background:var(--bg0);border:1px solid var(--border);border-radius:8px;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.spk{font-size:12px;color:var(--text3)}
+.spv{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text)}
 
-/* DISCLAIMER */
-.disc{background:var(--w);border-radius:var(--r);padding:13px 16px;margin-top:12px;border-left:3px solid var(--sand);font-size:12px;color:var(--mid);line-height:1.55}
+.disc{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--acc2);border-radius:var(--r);padding:13px 16px;margin-top:12px;font-size:12px;color:var(--text2);line-height:1.55}
 
 /* CTA */
-.cta{background:var(--acc);border-radius:var(--r2);padding:24px;margin-top:14px;text-align:center}
+.cta{background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:var(--r2);padding:28px 24px;margin-top:14px;text-align:center}
 .cta h3{font-family:var(--display);font-size:22px;font-weight:800;color:#fff;margin-bottom:6px}
-.cta p{font-size:14px;color:rgba(255,255,255,.65);margin-bottom:16px}
-.cta-link{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--acc);font-family:var(--display);font-size:14px;font-weight:700;padding:12px 24px;border-radius:var(--r);text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.15)}
-.cta-link:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(0,0,0,.2)}
-.cta-note{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.4);margin-top:10px}
+.cta p{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:16px}
+.cta-link{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--acc);font-family:var(--display);font-size:14px;font-weight:700;padding:12px 24px;border-radius:var(--r);text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.cta-link:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(0,0,0,.4)}
+.cta-note{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.5);margin-top:10px}
 
-/* COPY BTN */
-.cpbtn{width:100%;background:var(--off);border:1.5px solid var(--cream);border-radius:var(--r);padding:12px;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;color:var(--dark);transition:all .18s;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
-.cpbtn:hover{border-color:var(--acc);color:var(--acc);background:var(--aL)}
+.cpbtn{width:100%;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:12px;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .18s;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.cpbtn:hover{border-color:var(--acc2);color:var(--acc3);background:var(--aL)}
 
-/* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-family:var(--mono);font-size:13px;padding:10px 20px;border-radius:20px;transition:transform .3s;z-index:999;white-space:nowrap}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);border:1px solid var(--acc2);color:var(--acc3);font-family:var(--mono);font-size:13px;padding:10px 20px;border-radius:20px;transition:transform .3s;z-index:999;white-space:nowrap}
 .toast.on{transform:translateX(-50%) translateY(0)}
 
-/* ── 3D VIEWER ── */
-#viewer-wrap{
-  display:none;margin-top:18px;
-  background:#141210;border:1px solid #2a2420;
-  border-radius:var(--r);overflow:hidden;
-  box-shadow:0 4px 24px rgba(0,0,0,.25);
-}
-.viewer-toolbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 14px;background:#1a1715;border-bottom:1px solid #2a2420;
-  flex-wrap:wrap;gap:8px;
-}
-.viewer-title{
-  font-family:var(--mono);font-size:12px;color:#9a9088;
-  display:flex;align-items:center;gap:6px;min-width:0;
-}
-.viewer-title span{color:#5a5048}
-.viewer-title span:last-child{
-  color:#c8c0b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px;
-}
-.viewer-controls{display:flex;gap:5px;flex-wrap:wrap}
-.vbtn{
-  font-family:var(--mono);font-size:11px;padding:5px 11px;
-  background:#242018;border:1px solid #3a3428;border-radius:5px;
-  color:#888078;cursor:pointer;transition:all .16s;white-space:nowrap;
-}
-.vbtn:hover{border-color:#e8440a;color:#e8440a;background:#1e1a16}
-.vbtn.on{background:rgba(232,68,10,.15);border-color:#e8440a;color:#e8440a}
-#viewer-canvas{
-  display:block;width:100%;height:340px;cursor:grab;touch-action:none;
-}
-#viewer-canvas:active{cursor:grabbing}
-@media(max-width:480px){#viewer-canvas{height:260px}}
-.viewer-hint{
-  font-family:var(--mono);font-size:10px;color:#4a4540;
-  text-align:center;padding:7px;letter-spacing:.04em;background:#100e0c;
-}
-.viewer-size-info{
-  display:flex;gap:0;border-top:1px solid #2a2420;
-}
-.vsz{
-  flex:1;text-align:center;padding:8px 4px;border-right:1px solid #2a2420;
-}
-.vsz:last-child{border-right:none}
-.vsz-val{font-family:var(--mono);font-size:13px;font-weight:500;color:#c8c0b8}
-.vsz-lbl{font-family:var(--mono);font-size:9px;color:#5a5048;text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
-
-footer{text-align:center;padding:28px 0 0;font-family:var(--mono);font-size:11px;color:var(--mid)}
-footer a{color:var(--acc);text-decoration:none}
+footer{text-align:center;padding:28px 0 0;font-family:var(--mono);font-size:11px;color:var(--text3)}
+footer a{color:var(--acc3);text-decoration:none}
+footer a:hover{color:var(--text)}
 </style>
 </head>
 <body>
@@ -239,7 +199,7 @@ footer a{color:var(--acc);text-decoration:none}
 <div class="hero">
   <div class="hi">
     <a href="index.html" class="back">← Strona główna</a>
-    <div class="eyebrow">Błyskawiczna wycena online</div>
+    <div class="eyebrow">0880 PRINT LAB · Błyskawiczna wycena online</div>
     <h1>Sprawdź cenę<br>swojego wydruku 3D</h1>
     <p class="hero-sub">Wgraj plik STL — automatycznie obliczymy wagę i objętość. Wybierz materiał i dowiedz się ile to kosztuje.</p>
     <div class="steps">
@@ -252,9 +212,8 @@ footer a{color:var(--acc);text-decoration:none}
 
 <div class="main">
 
-<!-- UPLOAD -->
 <div class="card">
-  <div class="ch"><div class="ci">📁</div><div><div class="ct">Wgraj plik modelu</div><div class="cd">Format STL · analiza geometrii w przeglądarce</div></div></div>
+  <div class="ch"><div class="ci">📁</div><div><div class="ct">Wgraj plik modelu</div><div class="cd">Format STL · analiza geometrii w przeglądarce · podgląd 3D</div></div></div>
   <div class="cb">
     <div class="dz" id="dz" ondragover="onDO(event)" ondragleave="onDL(event)" ondrop="onDrop(event)">
       <input type="file" id="fi2" accept=".stl" onchange="handleFile(this.files[0])">
@@ -273,16 +232,14 @@ footer a{color:var(--acc);text-decoration:none}
         <div class="stb"><div class="stv" id="sWgt">—</div><div class="stl">Waga szac. (g)</div></div>
       </div>
     </div>
-
-    <!-- 3D VIEWER -->
     <div id="viewer-wrap">
       <div class="viewer-toolbar">
         <div class="viewer-title">🖨️ Podgląd 3D <span>·</span> <span id="vModelName">model.stl</span></div>
         <div class="viewer-controls">
-          <button class="vbtn" onclick="resetCamera()" title="Resetuj widok">⟳ Reset</button>
-          <button class="vbtn" id="wireBtn" onclick="toggleWire()" title="Tryb siatki">⬡ Siatka</button>
-          <button class="vbtn" id="shadBtn" onclick="toggleShading()" title="Cieniowanie">◑ Cień</button>
-          <button class="vbtn" id="axBtn" onclick="toggleAxes()" title="Osie">⊞ Osie</button>
+          <button class="vbtn" onclick="resetCamera()">⟳ Reset</button>
+          <button class="vbtn" id="wireBtn" onclick="toggleWire()">⬡ Siatka</button>
+          <button class="vbtn" id="shadBtn" onclick="toggleShading()">◑ Cień</button>
+          <button class="vbtn" id="axBtn" onclick="toggleAxes()">⊞ Osie</button>
         </div>
       </div>
       <canvas id="viewer-canvas"></canvas>
@@ -297,35 +254,29 @@ footer a{color:var(--acc);text-decoration:none}
   </div>
 </div>
 
-<!-- MATERIAL -->
 <div class="card">
-  <div class="ch"><div class="ci">🧵</div><div><div class="ct">Materiał druku</div><div class="cd">Wybierz filament lub żywicę</div></div></div>
+  <div class="ch"><div class="ci">🧵</div><div><div class="ct">Materiał druku</div><div class="cd">Wybierz filament FDM</div></div></div>
   <div class="cb">
-    <div class="mg" id="mgrid">
+    <div class="mg">
       <div class="mc on" onclick="selMat(this,'PLA',1.24,75)"><div class="md" style="background:#22c55e"></div><div class="mn">PLA</div><div class="mpr">~75 zł/kg</div></div>
       <div class="mc" onclick="selMat(this,'PETG',1.27,90)"><div class="md" style="background:#3b82f6"></div><div class="mn">PETG</div><div class="mpr">~90 zł/kg</div></div>
       <div class="mc" onclick="selMat(this,'ABS',1.04,85)"><div class="md" style="background:#f59e0b"></div><div class="mn">ABS</div><div class="mpr">~85 zł/kg</div></div>
       <div class="mc" onclick="selMat(this,'TPU',1.21,120)"><div class="md" style="background:#ec4899"></div><div class="mn">TPU</div><div class="mpr">~120 zł/kg</div></div>
-      <div class="mc" onclick="selMat(this,'Resin',1.10,180)"><div class="md" style="background:#8b5cf6"></div><div class="mn">Resin</div><div class="mpr">~180 zł/kg</div></div>
     </div>
   </div>
 </div>
 
-<!-- PARAMETERS -->
 <div class="card">
-  <div class="ch"><div class="ci">⚙️</div><div><div class="ct">Parametry wydruku</div><div class="cd">STL uzupełni wagę automatycznie</div></div></div>
+  <div class="ch"><div class="ci">⚙️</div><div><div class="ct">Parametry wydruku</div><div class="cd">STL uzupełnia wagę automatycznie · podaj wagę ze slicera dla dokładności</div></div></div>
   <div class="cb">
-    <div class="t2">
-      <div class="ig"><label>Waga modelu</label><div class="ii"><input type="number" id="wg" placeholder="— obliczona ze STL" min="0" step=".1"><span class="iu">g</span></div></div>
-      <div class="ig">
-        <label>Waga wg PrusaSlicer / Cura <span style="color:var(--acc);font-size:11px">← dokładniejsze</span></label>
-        <div class="ii"><input type="number" id="wgSlicer" placeholder="wpisz ręcznie" min="0" step=".1" oninput="if(this.value)document.getElementById('wg').value=this.value"><span class="iu">g</span></div>
-      </div>
-      <div class="ig"><label>Szacowany czas druku</label><div class="ii"><input type="number" id="tm" placeholder="np. 4.5 h" min="0" step=".5"><span class="iu">h</span></div></div>
+    <div class="t3">
+      <div class="ig"><label>Waga modelu (szacowana)</label><div class="ii"><input type="number" id="wg" placeholder="— ze STL" min="0" step=".1"><span class="iu">g</span></div></div>
+      <div class="ig"><label>Waga wg PrusaSlicer/Cura <span style="color:var(--acc3);font-size:11px">← dokładniej</span></label><div class="ii"><input type="number" id="wgSlicer" placeholder="wpisz ręcznie" min="0" step=".1" oninput="if(this.value)document.getElementById('wg').value=this.value"><span class="iu">g</span></div></div>
+      <div class="ig"><label>Szacowany czas druku</label><div class="ii"><input type="number" id="tm" placeholder="np. 4.5" min="0" step=".5"><span class="iu">h</span></div></div>
     </div>
     <div class="sep"></div>
     <div class="sl">Wypełnienie modelu</div>
-    <div class="ic" id="iChips">
+    <div class="ic">
       <div class="icp" onclick="selInfill(this,10)">10%</div>
       <div class="icp on" onclick="selInfill(this,20)">20%</div>
       <div class="icp" onclick="selInfill(this,40)">40%</div>
@@ -335,7 +286,7 @@ footer a{color:var(--acc);text-decoration:none}
     </div>
     <div class="sep"></div>
     <div class="sl">Czas realizacji</div>
-    <div class="uo" id="urgOpts">
+    <div class="uo">
       <div class="uc on" onclick="selUrg(this,1.0,'Standardowy','5–7 dni rob.')"><div class="ui">🗓️</div><div class="un">Standardowo</div><div class="ud">5–7 dni rob.</div><div class="um">×1.0</div></div>
       <div class="uc" onclick="selUrg(this,1.25,'Przyspieszony','2–3 dni rob.')"><div class="ui">⚡</div><div class="un">Przyspieszony</div><div class="ud">2–3 dni rob.</div><div class="um">×1.25</div></div>
       <div class="uc" onclick="selUrg(this,1.6,'Ekspres','24 godziny')"><div class="ui">🚀</div><div class="un">Ekspres</div><div class="ud">24 godziny</div><div class="um">×1.60</div></div>
@@ -345,7 +296,6 @@ footer a{color:var(--acc);text-decoration:none}
 
 <button class="cbtn" onclick="calc()">▶ Oblicz wycenę</button>
 
-<!-- RESULTS -->
 <div id="res">
   <div class="ph">
     <div class="phi">
@@ -359,14 +309,12 @@ footer a{color:var(--acc);text-decoration:none}
       </div>
     </div>
   </div>
-
   <div class="bdown">
     <div class="brow"><div class="brl"><span class="bri">🧵</span>Koszt materiału</div><div class="brv" id="rM">—</div></div>
     <div class="brow"><div class="brl"><span class="bri">⚙️</span>Koszt pracy drukarki</div><div class="brv" id="rW">—</div></div>
     <div class="brow"><div class="brl"><span class="bri">⚡</span>Koszt energii</div><div class="brv" id="rE">—</div></div>
     <div class="brow tot"><div class="brl">Cena netto (z marżą)</div><div class="brv" id="rT">—</div></div>
   </div>
-
   <div class="specs">
     <div class="sptitle">Szczegóły wyceny</div>
     <div class="spg">
@@ -378,33 +326,32 @@ footer a{color:var(--acc);text-decoration:none}
       <div class="spi"><span class="spk">Cena brutto</span><span class="spv" id="spG">—</span></div>
     </div>
   </div>
-
-  <div class="disc">⚠️ Wycena jest orientacyjna. Ostateczna cena zależy od geometrii modelu, wymagań supportów, postprocessingu i dostępności materiału. Skontaktuj się po dokładną wycenę.</div>
-
+  <div class="disc">⚠️ Wycena orientacyjna — ostateczna cena zależy od geometrii modelu, wymagań supportów i postprocessingu. Skontaktuj się po dokładną wycenę.</div>
   <button class="cpbtn" onclick="copyQ()">📋 Kopiuj wycenę do schowka</button>
-
   <div class="cta">
     <h3>Chcesz złożyć zamówienie?</h3>
     <p>Wyślij nam plik i szczegóły — odpiszemy w ciągu 24h</p>
-    <a href="mailto:twoj@email.pl?subject=Zamówienie druku 3D" class="cta-link">✉️ Napisz do nas</a>
-    <div class="cta-note">📞 +48 000 000 000</div>
+    <a href="mailto:radoslaw.wojcikowski092@gmail.com?subject=Zamówienie druku 3D — 0880 PRINT LAB" class="cta-link">✉️ Napisz do nas</a>
+    <div class="cta-note">📞 +48 531 922 269</div>
   </div>
 </div>
 
-<footer><p>© 2025 Twoja Firma Druk 3D · <a href="index.html">Strona główna</a> · <a href="kalkulator.html">Panel właściciela</a></p></footer>
+<footer>
+  <p>© 0880 PRINT LAB · Kamienna Góra ·
+    <a href="index.html">Strona główna</a> ·
+    <a href="mailto:radoslaw.wojcikowski092@gmail.com">radoslaw.wojcikowski092@gmail.com</a>
+  </p>
+</footer>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// STATE
 const S={mat:'PLA',density:1.24,price:75,infill:20,urgMult:1.0,urgLabel:'Standardowy (5–7 dni)',volCm3:null};
-const MATS={PLA:{d:1.24,p:75,h:12},PETG:{d:1.27,p:90,h:13},ABS:{d:1.04,p:85,h:13},TPU:{d:1.21,p:120,h:15},Resin:{d:1.10,p:180,h:18}};
+const MATS={PLA:{d:1.24,p:75,h:12},PETG:{d:1.27,p:90,h:13},ABS:{d:1.04,p:85,h:13},TPU:{d:1.21,p:120,h:15}};
 
-// ─── WEIGHT FORMULA (fixed) ────────────────────────────────────────────────
-// Realistic: shell ~8% of volume + infill of remaining 92%
-function infillFactor(pct){ return 0.08 + (pct/100) * 0.78; }
+function infillFactor(pct){return 0.08+(pct/100)*0.78}
 
 function selMat(el,n,d,p){
   document.querySelectorAll('.mc').forEach(c=>c.classList.remove('on'));el.classList.add('on');
@@ -417,12 +364,10 @@ function selInfill(el,v){
 }
 function selUrg(el,m,n,d){document.querySelectorAll('.uc').forEach(c=>c.classList.remove('on'));el.classList.add('on');S.urgMult=m;S.urgLabel=n+' ('+d+')'}
 
-// ─── DRAG DROP ─────────────────────────────────────────────────────────────
 function onDO(e){e.preventDefault();document.getElementById('dz').classList.add('over')}
-function onDL(e){document.getElementById('dz').classList.remove('over')}
+function onDL(){document.getElementById('dz').classList.remove('over')}
 function onDrop(e){e.preventDefault();document.getElementById('dz').classList.remove('over');const f=e.dataTransfer.files[0];if(f)handleFile(f)}
 
-// ─── FILE HANDLING ─────────────────────────────────────────────────────────
 function handleFile(file){
   if(!file)return;
   if(!file.name.toLowerCase().endsWith('.stl')){showErr('Proszę wybrać plik .STL');return}
@@ -441,11 +386,7 @@ function handleFile(file){
         setTimeout(()=>{
           finishParse(res);
           showProg('Renderowanie podglądu 3D…',90);
-          setTimeout(()=>{
-            buildViewer(res.positions);
-            showProg('Gotowe!',100);
-            setTimeout(hideProg,500);
-          },80);
+          setTimeout(()=>{buildViewer(res.positions);showProg('Gotowe!',100);setTimeout(hideProg,500)},80);
         },100);
       }catch(err){hideProg();showErr('Błąd parsowania: '+err.message)}
     },80);
@@ -453,14 +394,12 @@ function handleFile(file){
   r.readAsArrayBuffer(file);
 }
 
-// ─── STL PARSER ────────────────────────────────────────────────────────────
 function parseSTL(buf){
   const a=new Uint8Array(buf);
   const bin=isBinary(a,buf);
   const {tris,positions}=bin?parseBin(buf):parseAsc(new TextDecoder().decode(buf));
   if(!tris.length)throw new Error('Nie znaleziono trójkątów');
-  let vol=0;
-  let minX=Infinity,minY=Infinity,minZ=Infinity,maxX=-Infinity,maxY=-Infinity,maxZ=-Infinity;
+  let vol=0,minX=Infinity,minY=Infinity,minZ=Infinity,maxX=-Infinity,maxY=-Infinity,maxZ=-Infinity;
   for(const t of tris){
     vol+=signedVol(t[0],t[1],t[2]);
     for(const v of t){
@@ -469,12 +408,7 @@ function parseSTL(buf){
       if(v[2]<minZ)minZ=v[2];if(v[2]>maxZ)maxZ=v[2];
     }
   }
-  return{
-    triangles:tris.length,
-    volumeCm3:Math.abs(vol)/1000,
-    positions,
-    size:{x:maxX-minX,y:maxY-minY,z:maxZ-minZ}
-  };
+  return{triangles:tris.length,volumeCm3:Math.abs(vol)/1000,positions,size:{x:maxX-minX,y:maxY-minY,z:maxZ-minZ}};
 }
 
 function isBinary(a,buf){
@@ -487,10 +421,8 @@ function isBinary(a,buf){
 
 function parseBin(buf){
   const v=new DataView(buf);const n=v.getUint32(80,true);
-  const tris=[];
-  // For large models, sample positions (max 300k triangles for viewer)
-  const maxView=300000;const step=Math.max(1,Math.floor(n/maxView));
-  const positions=new Float32Array(Math.min(n,maxView)*9);
+  const tris=[];const maxV=300000;const step=Math.max(1,Math.floor(n/maxV));
+  const positions=new Float32Array(Math.min(n,maxV)*9);
   let pi=0,o=84;
   for(let i=0;i<n;i++){
     o+=12;
@@ -498,24 +430,16 @@ function parseBin(buf){
     const bx=v.getFloat32(o,true),by=v.getFloat32(o+4,true),bz=v.getFloat32(o+8,true);o+=12;
     const cx=v.getFloat32(o,true),cy=v.getFloat32(o+4,true),cz=v.getFloat32(o+8,true);o+=14;
     tris.push([[ax,ay,az],[bx,by,bz],[cx,cy,cz]]);
-    if(i%step===0&&pi<positions.length-8){
-      positions[pi++]=ax;positions[pi++]=ay;positions[pi++]=az;
-      positions[pi++]=bx;positions[pi++]=by;positions[pi++]=bz;
-      positions[pi++]=cx;positions[pi++]=cy;positions[pi++]=cz;
-    }
+    if(i%step===0&&pi<positions.length-8){positions[pi++]=ax;positions[pi++]=ay;positions[pi++]=az;positions[pi++]=bx;positions[pi++]=by;positions[pi++]=bz;positions[pi++]=cx;positions[pi++]=cy;positions[pi++]=cz}
   }
   return{tris,positions:positions.slice(0,pi)};
 }
 
 function parseAsc(txt){
   const tris=[];const re=/vertex\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)/g;
-  let m,vs=[];const posArr=[];
-  while((m=re.exec(txt))!==null){
-    const p=[parseFloat(m[1]),parseFloat(m[2]),parseFloat(m[3])];
-    vs.push(p);posArr.push(...p);
-    if(vs.length===3){tris.push([vs[0],vs[1],vs[2]]);vs=[]}
-  }
-  return{tris,positions:new Float32Array(posArr)};
+  let m,vs=[];const pos=[];
+  while((m=re.exec(txt))!==null){const p=[parseFloat(m[1]),parseFloat(m[2]),parseFloat(m[3])];vs.push(p);pos.push(...p);if(vs.length===3){tris.push([vs[0],vs[1],vs[2]]);vs=[]}}
+  return{tris,positions:new Float32Array(pos)};
 }
 
 function signedVol(p1,p2,p3){return(p1[0]*(p2[1]*p3[2]-p2[2]*p3[1])+p2[0]*(p3[1]*p1[2]-p3[2]*p1[1])+p3[0]*(p1[1]*p2[2]-p1[2]*p2[1]))/6}
@@ -527,207 +451,100 @@ function finishParse(res){
   document.getElementById('sVol').textContent=res.volumeCm3.toFixed(2);
   document.getElementById('sWgt').textContent=w+' g (szac.)';
   document.getElementById('wg').value=w;
-  // Size info bar
-  if(res.size){
-    document.getElementById('vSzX').textContent=res.size.x.toFixed(1);
-    document.getElementById('vSzY').textContent=res.size.y.toFixed(1);
-    document.getElementById('vSzZ').textContent=res.size.z.toFixed(1);
-  }
+  if(res.size){document.getElementById('vSzX').textContent=res.size.x.toFixed(1);document.getElementById('vSzY').textContent=res.size.y.toFixed(1);document.getElementById('vSzZ').textContent=res.size.z.toFixed(1)}
   document.getElementById('vSzVol').textContent=res.volumeCm3.toFixed(2);
   document.getElementById('fi').style.display='block';
-  toast('✓ Plik przeanalizowany — podaj wagę ze slicera dla dokładnej wyceny');
+  toast('✓ STL przeanalizowany — dla dokładności podaj wagę ze slicera');
 }
 
-// ─── THREE.JS VIEWER ───────────────────────────────────────────────────────
-let renderer,scene,camera,mesh,wireframe,axesHelper,animId;
-let isWire=false,isFlat=false,showAxes=false;
+let renderer,scene,camera,mesh,axesHelper,animId,isWire=false,isFlat=false,showAxes=false;
 
 function buildViewer(positions){
-  const wrap=document.getElementById('viewer-wrap');
-  wrap.style.display='block';
+  const wrap=document.getElementById('viewer-wrap');wrap.style.display='block';
   const canvas=document.getElementById('viewer-canvas');
-
-  // Cleanup previous
   if(renderer){renderer.dispose();cancelAnimationFrame(animId)}
-
   const W=canvas.clientWidth,H=canvas.clientHeight||340;
   canvas.width=W*devicePixelRatio;canvas.height=H*devicePixelRatio;
-
-  renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
-  renderer.setPixelRatio(devicePixelRatio);
-  renderer.setSize(W,H,false);
-  renderer.shadowMap.enabled=true;
-  renderer.setClearColor(0x141210,1);
-
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setPixelRatio(devicePixelRatio);renderer.setSize(W,H,false);renderer.setClearColor(0x080808,1);
   scene=new THREE.Scene();
-  scene.fog=new THREE.Fog(0x141210,80,200);
-
-  // Camera
   camera=new THREE.PerspectiveCamera(45,W/H,0.01,1000);
-  camera.position.set(0,0,3);
-
-  // Lights
   scene.add(new THREE.AmbientLight(0xffffff,0.55));
   const d1=new THREE.DirectionalLight(0xffffff,0.9);d1.position.set(1,2,2);scene.add(d1);
-  const d2=new THREE.DirectionalLight(0xe8440a,0.35);d2.position.set(-2,-1,-1);scene.add(d2);
-  const d3=new THREE.DirectionalLight(0x8866ff,0.25);d3.position.set(0,3,-2);scene.add(d3);
-
-  // Grid floor
-  const grid=new THREE.GridHelper(10,20,0x2a2420,0x1e1c18);
-  grid.position.y=-1.1;scene.add(grid);
-
-  // Axes
+  const d2=new THREE.DirectionalLight(0xa060d8,0.45);d2.position.set(-2,-1,-1);scene.add(d2);
+  const d3=new THREE.DirectionalLight(0x6b1fa8,0.3);d3.position.set(0,3,-2);scene.add(d3);
+  const grid=new THREE.GridHelper(10,20,0x3a1850,0x1a0830);grid.position.y=-1.1;scene.add(grid);
   axesHelper=new THREE.AxesHelper(1.5);axesHelper.visible=false;scene.add(axesHelper);
-
-  // Geometry
   const geo=new THREE.BufferGeometry();
   geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
-  geo.computeVertexNormals();
-  geo.center();
-
-  // Scale to fit view
+  geo.computeVertexNormals();geo.center();
   geo.computeBoundingBox();
-  const bb=geo.boundingBox;
-  const size=new THREE.Vector3();bb.getSize(size);
-  const maxDim=Math.max(size.x,size.y,size.z);
-  const scale=1.8/maxDim;
-  geo.scale(scale,scale,scale);
-  geo.computeBoundingBox();
-  const bb2=geo.boundingBox;
-  geo.translate(0,-(bb2.min.y),0);
-  geo.translate(0,-((bb2.max.y-bb2.min.y)/2),0);
-
-  // Materials
-  const matSolid=new THREE.MeshPhongMaterial({color:0xd0c8c0,specular:0x444444,shininess:40,side:THREE.DoubleSide});
-  const matWire=new THREE.MeshBasicMaterial({color:0xe8440a,wireframe:true,transparent:true,opacity:0.7});
-  const matFlat=new THREE.MeshLambertMaterial({color:0xd0c8c0,side:THREE.DoubleSide,flatShading:true});
-
-  mesh=new THREE.Mesh(geo,matSolid);
-  wireframe=new THREE.Mesh(geo,matWire);wireframe.visible=false;
-  scene.add(mesh);scene.add(wireframe);
-
-  // Position camera
-  camera.position.set(0,0.5,3.5);
-  camera.lookAt(0,0,0);
-
-  // Store materials on mesh for toggling
-  mesh.userData={solid:matSolid,wire:matWire,flat:matFlat};
-
-  // Orbit controls (manual)
+  const bb=geo.boundingBox;const sz=new THREE.Vector3();bb.getSize(sz);
+  const sc=1.8/Math.max(sz.x,sz.y,sz.z);geo.scale(sc,sc,sc);
+  geo.computeBoundingBox();const bb2=geo.boundingBox;
+  geo.translate(0,-((bb2.max.y+bb2.min.y)/2),0);
+  const matS=new THREE.MeshPhongMaterial({color:0xc8b8e8,specular:0x6b1fa8,shininess:50,side:THREE.DoubleSide});
+  const matW=new THREE.MeshBasicMaterial({color:0xa060d8,wireframe:true,transparent:true,opacity:0.7});
+  const matF=new THREE.MeshLambertMaterial({color:0xc8b8e8,side:THREE.DoubleSide,flatShading:true});
+  mesh=new THREE.Mesh(geo,matS);mesh.userData={solid:matS,wire:matW,flat:matF};scene.add(mesh);
+  camera.position.set(0,0.5,3.5);camera.lookAt(0,0,0);
   setupOrbit(canvas);
-
-  // Animate
   let autoRot=true;
   canvas.addEventListener('mousedown',()=>{autoRot=false});
   canvas.addEventListener('touchstart',()=>{autoRot=false},{passive:true});
-
-  function animate(){
-    animId=requestAnimationFrame(animate);
-    if(autoRot)scene.rotation.y+=0.004;
-    renderer.render(scene,camera);
-  }
+  function animate(){animId=requestAnimationFrame(animate);if(autoRot)scene.rotation.y+=0.004;renderer.render(scene,camera)}
   animate();
-
-  // Resize observer
-  const ro=new ResizeObserver(()=>{
-    const w=canvas.clientWidth,h=canvas.clientHeight||340;
-    renderer.setSize(w,h,false);
-    camera.aspect=w/h;camera.updateProjectionMatrix();
-  });
-  ro.observe(canvas);
-
+  new ResizeObserver(()=>{const w=canvas.clientWidth,h=canvas.clientHeight||340;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}).observe(canvas);
   wrap.scrollIntoView({behavior:'smooth',block:'nearest'});
   toast('✓ Podgląd 3D załadowany — przeciągnij aby obrócić');
 }
 
-// ─── ORBIT (manual mouse + touch) ─────────────────────────────────────────
 function setupOrbit(canvas){
   let dragging=false,lastX=0,lastY=0,dist=3.5;
-
   canvas.addEventListener('mousedown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY});
   window.addEventListener('mouseup',()=>dragging=false);
   window.addEventListener('mousemove',e=>{
     if(!dragging)return;
-    const dx=(e.clientX-lastX)*0.006;
-    const dy=(e.clientY-lastY)*0.006;
-    lastX=e.clientX;lastY=e.clientY;
-    const qH=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),dx);
-    const qV=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),dy);
-    scene.quaternion.premultiply(qH).premultiply(qV);
+    const dx=(e.clientX-lastX)*0.006,dy=(e.clientY-lastY)*0.006;lastX=e.clientX;lastY=e.clientY;
+    scene.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),dx));
+    scene.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),dy));
   });
-
-  canvas.addEventListener('wheel',e=>{
-    e.preventDefault();
-    dist=Math.max(0.5,Math.min(20,dist+e.deltaY*0.005));
-    camera.position.setLength(dist);
-  },{passive:false});
-
-  // Touch
+  canvas.addEventListener('wheel',e=>{e.preventDefault();dist=Math.max(0.5,Math.min(20,dist+e.deltaY*0.005));camera.position.setLength(dist)},{passive:false});
   let touches=[];
-  canvas.addEventListener('touchstart',e=>{touches=[...e.touches];},{passive:true});
+  canvas.addEventListener('touchstart',e=>{touches=[...e.touches]},{passive:true});
   canvas.addEventListener('touchmove',e=>{
     e.preventDefault();
     if(e.touches.length===1&&touches.length===1){
-      const dx=(e.touches[0].clientX-touches[0].clientX)*0.006;
-      const dy=(e.touches[0].clientY-touches[0].clientY)*0.006;
-      const qH=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),dx);
-      const qV=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),dy);
-      scene.quaternion.premultiply(qH).premultiply(qV);
-    } else if(e.touches.length===2&&touches.length===2){
+      const dx=(e.touches[0].clientX-touches[0].clientX)*0.006,dy=(e.touches[0].clientY-touches[0].clientY)*0.006;
+      scene.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),dx));
+      scene.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),dy));
+    }else if(e.touches.length===2&&touches.length===2){
       const d0=Math.hypot(touches[0].clientX-touches[1].clientX,touches[0].clientY-touches[1].clientY);
       const d1=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-      dist=Math.max(0.5,Math.min(20,dist-(d1-d0)*0.01));
-      camera.position.setLength(dist);
+      dist=Math.max(0.5,Math.min(20,dist-(d1-d0)*0.01));camera.position.setLength(dist);
     }
     touches=[...e.touches];
   },{passive:false});
 }
 
-// ─── VIEWER CONTROLS ───────────────────────────────────────────────────────
-function resetCamera(){
-  if(!scene)return;
-  scene.quaternion.set(0,0,0,1);
-  camera.position.set(0,0.5,3.5);
-  camera.lookAt(0,0,0);
-  toast('↩ Widok zresetowany');
-}
-
-function toggleWire(){
-  if(!mesh)return;
-  isWire=!isWire;
-  mesh.material=isWire?mesh.userData.wire:mesh.userData.solid;
-  wireframe.visible=false;
-  document.getElementById('wireBtn').classList.toggle('on',isWire);
-}
-
-function toggleShading(){
-  if(!mesh)return;
-  isFlat=!isFlat;
-  if(!isWire)mesh.material=isFlat?mesh.userData.flat:mesh.userData.solid;
-  document.getElementById('shadBtn').classList.toggle('on',isFlat);
-}
-
-function toggleAxes(){
-  if(!axesHelper)return;
-  showAxes=!showAxes;
-  axesHelper.visible=showAxes;
-  document.getElementById('axBtn').classList.toggle('on',showAxes);
-}
+function resetCamera(){if(!scene)return;scene.quaternion.set(0,0,0,1);camera.position.set(0,0.5,3.5);camera.lookAt(0,0,0);toast('↩ Widok zresetowany')}
+function toggleWire(){if(!mesh)return;isWire=!isWire;mesh.material=isWire?mesh.userData.wire:mesh.userData.solid;document.getElementById('wireBtn').classList.toggle('on',isWire)}
+function toggleShading(){if(!mesh)return;isFlat=!isFlat;if(!isWire)mesh.material=isFlat?mesh.userData.flat:mesh.userData.solid;document.getElementById('shadBtn').classList.toggle('on',isFlat)}
+function toggleAxes(){if(!axesHelper)return;showAxes=!showAxes;axesHelper.visible=showAxes;document.getElementById('axBtn').classList.toggle('on',showAxes)}
 
 function showProg(l,p){document.getElementById('prog').style.display='block';document.getElementById('pf').style.width=p+'%';document.getElementById('pl').textContent=l}
 function hideProg(){document.getElementById('prog').style.display='none'}
 function showErr(m){const e=document.getElementById('err');e.textContent='⚠ '+m;e.style.display='block'}
 function hideErr(){document.getElementById('err').style.display='none'}
 
-// ─── CALC ──────────────────────────────────────────────────────────────────
 function fmt(n){return n.toFixed(2).replace('.',',')+' zł'}
 function calc(){
   const w=parseFloat(document.getElementById('wg').value)||0;
   const t=parseFloat(document.getElementById('tm').value)||(w/15)||1;
   if(!w){toast('⚠ Wgraj plik STL lub wpisz wagę');return}
   const m=MATS[S.mat];
-  const cM=w/1000*m.p;const cW=t*m.h;const cE=t*0.35*0.82;
-  const cB=cM+cW+cE;const net=cB*1.35*S.urgMult;const br=net*1.23;
+  const cM=w/1000*m.p,cW=t*m.h,cE=t*0.35*0.82;
+  const net=(cM+cW+cE)*1.35*S.urgMult,br=net*1.23;
   document.getElementById('pMain').textContent=fmt(net);
   document.getElementById('pRange').textContent='Przedział: '+fmt(net*.85)+' — '+fmt(net*1.15);
   document.getElementById('bMat').textContent=S.mat;
@@ -752,7 +569,7 @@ function copyQ(){
   const t=parseFloat(document.getElementById('tm').value)||(w/15)||1;
   const m=MATS[S.mat];const cM=w/1000*m.p,cW=t*m.h,cE=t*0.35*0.82;
   const net=(cM+cW+cE)*1.35*S.urgMult;
-  const txt=`=== WYCENA DRUKU 3D ===\nData: ${new Date().toLocaleDateString('pl-PL')}\nMateriał: ${S.mat} | Waga: ${w.toFixed(1)}g | Czas: ${t.toFixed(1)}h\nWypełnienie: ${S.infill}% | Realizacja: ${S.urgLabel}\n\nKoszt materiału: ${fmt(cM)}\nKoszt pracy:     ${fmt(cW)}\nKoszt energii:   ${fmt(cE)}\nCena netto:      ${fmt(net)}\nCena brutto:     ${fmt(net*1.23)}\n\n⚠ Wycena orientacyjna\nKontakt: twoj@email.pl | +48 000 000 000`;
+  const txt=`=== WYCENA 0880 PRINT LAB ===\nData: ${new Date().toLocaleDateString('pl-PL')}\nMateriał: ${S.mat} | Waga: ${w.toFixed(1)}g | Czas: ${t.toFixed(1)}h\nWypełnienie: ${S.infill}% | Realizacja: ${S.urgLabel}\n\nKoszt materiału: ${fmt(cM)}\nKoszt pracy:     ${fmt(cW)}\nKoszt energii:   ${fmt(cE)}\nCena netto:      ${fmt(net)}\nCena brutto:     ${fmt(net*1.23)}\n\n⚠ Wycena orientacyjna\nKontakt: radoslaw.wojcikowski092@gmail.com | +48 531 922 269`;
   navigator.clipboard.writeText(txt).then(()=>toast('✓ Skopiowano do schowka')).catch(()=>toast('⚠ Błąd'));
 }
 
